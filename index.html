@@ -203,6 +203,17 @@
             font-weight: bold;
         }
         
+        .size-btn.adidas-size {
+            border-color: #b0c4de;
+            background: #f0f4ff;
+        }
+        
+        .size-btn.adidas-size.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
         .item {
             border: 1px solid #dee2e6;
             padding: 12px;
@@ -353,6 +364,30 @@
             font-size: 0.85em;
         }
         
+        .size-legend {
+            display: flex;
+            gap: 15px;
+            margin: 5px 0 10px 0;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        
+        .size-legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .size-legend .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .size-legend .dot-standard { background: white; border: 2px solid #dee2e6; }
+        .size-legend .dot-adidas { background: #f0f4ff; border: 2px solid #b0c4de; }
+        
         @media (max-width: 768px) {
             .header h1 { font-size: 1.5em; }
             .content { padding: 10px; }
@@ -466,6 +501,10 @@
                 
                 <div class="section">
                     <h2>👟 Größe*</h2>
+                    <div class="size-legend">
+                        <span><span class="dot dot-standard"></span> Standard</span>
+                        <span><span class="dot dot-adidas"></span> Adidas EU (⅓/⅔)</span>
+                    </div>
                     <div class="size-grid" id="sizeGrid"></div>
                 </div>
                 
@@ -656,7 +695,30 @@
         let selectedSize = null;
         let stream = null;
         
-        const sizes = ['35','35.5','36','36.5','37','37.5','38','38.5','39','39.5','40','40.5','41','41.5','42','42.5','43','43.5','44','44.5','45','45.5','46','46.5','47','47.5','48'];
+        // Alle Größen: Standard (.5) + Adidas EU (⅓/⅔) — numerisch sortiert
+        const sizes = [
+            '35','35.5',
+            '36','36.5','36⅔',
+            '37','37⅓','37.5',
+            '38','38.5','38⅔',
+            '39','39⅓','39.5',
+            '40','40.5','40⅔',
+            '41','41⅓','41.5',
+            '42','42.5','42⅔',
+            '43','43⅓','43.5',
+            '44','44.5','44⅔',
+            '45','45⅓','45.5',
+            '46','46.5','46⅔',
+            '47','47⅓','47.5',
+            '48','48⅔',
+            '49⅓','49.5',
+            '50'
+        ];
+        
+        // Hilfsfunktion: Erkennt Adidas-Drittelgrößen
+        function isAdidasSize(size) {
+            return size.includes('⅓') || size.includes('⅔');
+        }
         
         // Init
         document.addEventListener('DOMContentLoaded', () => {
@@ -728,13 +790,13 @@
             }
         }
         
-        // Größen
+        // Größen-Grid mit visueller Unterscheidung
         function createSizeGrid() {
             const grid = document.getElementById('sizeGrid');
             grid.innerHTML = '';
             sizes.forEach(size => {
                 const btn = document.createElement('div');
-                btn.className = 'size-btn';
+                btn.className = 'size-btn' + (isAdidasSize(size) ? ' adidas-size' : '');
                 btn.textContent = size;
                 btn.onclick = () => {
                     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
