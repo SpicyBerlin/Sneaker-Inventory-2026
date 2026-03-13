@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Sneaker Inventar Pro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .section h2 {
+            margin: 0 0 15px 0;
+            color: #495057;
+            font-size: 1.3em;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .btn-success { background: #28a745; }
+        .btn-danger { background: #dc3545; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .size-btn {
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #dee2e6;
+            background: white;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .size-btn.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .item {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .item h4 {
+            margin: 0 0 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 Sneaker Inventar Pro</h1>
+            <p>Professionelles Sneaker-Management</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('add')">📦 Erfassen</button>
+            <button class="tab" onclick="showTab('inventory')">📋 Inventar</button>
+            <button class="tab" onclick="showTab('settings')">⚙️ Einstellungen</button>
+        </div>
+        
+        <div class="content">
+            <div id="message" style="display: none;"></div>
+            
+            <!-- ADD TAB -->
+            <div id="add" class="tab-content active">
+                <div class="section">
+                    <h2>Artikel erfassen</h2>
+                    
+                    <label>SKU:</label>
+                    <input type="text" id="sku" placeholder="z.B. DD7117-100">
+                    
+                    <label>Produktname:</label>
+                    <input type="text" id="productName" placeholder="z.B. Nike Air Force 1">
+                    
+                    <label>Marke:</label>
+                    <select id="brand">
+                        <option value="Nike">Nike</option>
+                        <option value="Adidas">Adidas</option>
+                        <option value="Jordan">Jordan</option>
+                    </select>
+                    
+                    <label>Größe:</label>
+                    <div class="size-grid" id="sizeGrid"></div>
+                    
+                    <label>Einkaufspreis (EUR):</label>
+                    <input type="number" id="purchasePrice" placeholder="0">
+                    
+                    <label>Lagerort:</label>
+                    <input type="text" id="location" placeholder="z.B. Regal A1">
+                    
+                    <button onclick="saveItem()" class="btn-success">💾 Speichern</button>
+                    <button onclick="resetForm()">🔄 Zurücksetzen</button>
+                </div>
+            </div>
+            
+            <!-- INVENTORY TAB -->
+            <div id="inventory" class="tab-content">
+                <div class="section">
+                    <h2>Inventar</h2>
+                    <button onclick="loadInventory()" class="btn-success">🔄 Laden</button>
+                    <button onclick="exportCSV()" class="btn-warning">📊 CSV Export</button>
+                    <div id="inventoryList"></div>
+                </div>
+            </div>
+            
+            <!-- SETTINGS TAB -->
+            <div id="settings" class="tab-content">
+                <div class="section">
+                    <h2>Einstellungen</h2>
+                    <button onclick="exportBackup()" class="btn-success">💾 Backup erstellen</button>
+                    <button onclick="document.getElementById('importFile').click()">📁 Backup laden</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importBackup()">
+                    
+                    <h3 style="margin-top: 20px;">CSV Import</h3>
+                    <button onclick="document.getElementById('csvFile').click()" class="btn-warning">📊 CSV hochladen</button>
+                    <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="importCSV()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('✅ App gestartet!');
+        
+        let inventory = JSON.parse(localStorage.getItem('inventory') || '[]');
+        let selectedSize = null;
+        
+        const sizes = ['38', '38.5', '39', '40', '40.5', '41', '42', '42.5', '43', '44', '44.5', '45', '46'];
+        
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM geladen');
+            createSizeGrid();
+        });
+        
+        // Tabs
+        function showTab(name) {
+            console.log('Tab wechsel:', name);
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(name).classList.add('active');
+            
+            if (name === 'inventory') loadInventory();
+        }
+        
+        // Größenraster
+        function createSizeGrid() {
+            const grid = document.getElementById('sizeGrid');
+            grid.innerHTML = '';
+            sizes.forEach(size => {
+                const btn = document.createElement('div');
+                btn.className = 'size-btn';
+                btn.textContent = size;
+                btn.onclick = () => {
+                    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedSize = size;
+                };
+                grid.appendChild(btn);
+            });
+            console.log('✅ Größenraster erstellt');
+        }
+        
+        // Speichern
+        function saveItem() {
+            const sku = document.getElementById('sku').value.trim();
+            const name = document.getElementById('productName').value.trim();
+            const price = document.getElementById('purchasePrice').value;
+            
+            if (!sku || !name || !selectedSize || !price) {
+                showMessage('Bitte alle Felder ausfüllen!', 'error');
+                return;
+            }
+            
+            const item = {
+                id: Date.now(),
+                sku: sku.toUpperCase(),
+                name: name,
+                brand: document.getElementById('brand').value,
+                size: selectedSize,
+                purchasePrice: parseFloat(price),
+                location: document.getElementById('location').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            inventory.push(item);
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            
+            showMessage('✅ Artikel gespeichert!', 'success');
+            resetForm();
+        }
+        
+        // Reset
+        function resetForm() {
+            document.getElementById('sku').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('purchasePrice').value = '';
+            document.getElementById('location').value = '';
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            selectedSize = null;
+        }
+        
+        // Inventar laden
+        function loadInventory() {
+            const container = document.getElementById('inventoryList');
+            container.innerHTML = '';
+            
+            if (inventory.length === 0) {
+                container.innerHTML = '<p>Keine Artikel vorhanden</p>';
+                return;
+            }
+            
+            inventory.forEach((item, i) => {
+                const div = document.createElement('div');
+                div.className = 'item';
+                div.innerHTML = `
+                    <h4>${item.name}</h4>
+                    <p><strong>SKU:</strong> ${item.sku} | <strong>Größe:</strong> ${item.size}</p>
+                    <p><strong>Preis:</strong> €${item.purchasePrice} | <strong>Lagerort:</strong> ${item.location || '-'}</p>
+                    <button onclick="deleteItem(${i})" class="btn-danger">🗑️ Löschen</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        // Löschen
+        function deleteItem(index) {
+            if (confirm('Wirklich löschen?')) {
+                inventory.splice(index, 1);
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                loadInventory();
+                showMessage('Artikel gelöscht', 'success');
+            }
+        }
+        
+        // CSV Export
+        function exportCSV() {
+            if (inventory.length === 0) {
+                showMessage('Kein Inventar vorhanden', 'error');
+                return;
+            }
+            
+            const headers = ['SKU', 'Name', 'Marke', 'Größe', 'Preis', 'Lagerort', 'Datum'];
+            const csv = [
+                headers.join(','),
+                ...inventory.map(item => [
+                    item.sku,
+                    `"${item.name}"`,
+                    item.brand,
+                    item.size,
+                    item.purchasePrice,
+                    `"${item.location || ''}"`,
+                    item.date
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sneaker-inventar-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showMessage('✅ CSV exportiert!', 'success');
+        }
+        
+        // CSV Import
+        function importCSV() {
+            const file = document.getElementById('csvFile').files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const lines = e.target.result.split('\n');
+                    let count = 0;
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const parts = line.split(',');
+                        if (parts.length < 2) continue;
+                        
+                        const item = {
+                            id: Date.now() + i,
+                            sku: parts[0]?.trim().toUpperCase() || '',
+                            name: parts[1]?.replace(/"/g, '').trim() || '',
+                            brand: parts[2]?.trim() || 'Nike',
+                            size: parts[3]?.trim() || '42',
+                            purchasePrice: parseFloat(parts[4]) || 0,
+                            location: parts[5]?.replace(/"/g, '').trim() || '',
+                            date: parts[6]?.trim() || new Date().toISOString().split('T')[0]
+                        };
+                        
+                        if (item.sku && item.name) {
+                            inventory.push(item);
+                            count++;
+                        }
+                    }
+                    
+                    localStorage.setItem('inventory', JSON.stringify(inventory));
+                    showMessage(`✅ ${count} Artikel importiert!`, 'success');
+                    
+                } catch (error) {
+                    showMessage('❌ Import fehlgeschlagen', 'error');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // Backup
+        function exportBackup() {
+            const data = {
+                inventory: inventory,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sneaker-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showMessage('✅ Backup erstellt!', 'success');
+        }
+        
+        function importBackup() {
+            const file = document.getElementById('importFile').files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    inventory = data.inventory || [];
+                    localStorage.setItem('inventory', JSON.stringify(inventory));
+                    showMessage('✅ Backup geladen!', 'success');
+                } catch (error) {
+                    showMessage('❌ Backup fehlerhaft', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // Nachrichten
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+        
+        console.log('✅ Alle Funktionen geladen');
+    </script>
+</body>
+</html>
