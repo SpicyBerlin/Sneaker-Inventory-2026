@@ -13,11 +13,11 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -28,14 +28,14 @@
         .header {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
         }
         
         .header h1 {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: 300;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .tabs {
@@ -43,22 +43,24 @@
             background: #f8f9fa;
             border-bottom: 2px solid #dee2e6;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .tab {
             flex: 1;
-            min-width: 120px;
-            padding: 15px;
+            min-width: 100px;
+            padding: 12px 10px;
             text-align: center;
             cursor: pointer;
             border: none;
             background: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             transition: all 0.3s;
+            white-space: nowrap;
         }
         
-        .tab:hover {
+        .tab:hover, .tab:active {
             background: #e9ecef;
         }
         
@@ -68,29 +70,48 @@
         }
         
         .content {
-            padding: 20px;
+            padding: 15px;
         }
         
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s;
         }
         
         .tab-content.active {
             display: block;
         }
         
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         .section {
-            margin: 20px 0;
-            padding: 20px;
+            margin: 15px 0;
+            padding: 15px;
             border: 1px solid #e9ecef;
             border-radius: 10px;
             background: #f8f9fa;
         }
         
         .section h2 {
-            margin: 0 0 15px 0;
+            margin: 0 0 12px 0;
             color: #495057;
-            font-size: 1.3em;
+            font-size: 1.2em;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        @media (min-width: 768px) {
+            .input-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         label {
@@ -98,87 +119,245 @@
             margin-bottom: 5px;
             font-weight: 600;
             color: #495057;
+            font-size: 0.9em;
         }
         
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             border: 2px solid #e9ecef;
             border-radius: 8px;
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
         }
         
         button {
-            padding: 12px 20px;
+            padding: 12px 16px;
             background: #007bff;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            margin: 5px;
-            font-size: 16px;
+            margin: 5px 5px 5px 0;
+            font-size: 14px;
             font-weight: 500;
+            transition: all 0.2s;
+            touch-action: manipulation;
         }
         
-        button:hover {
-            background: #0056b3;
+        button:active {
+            transform: scale(0.98);
         }
         
         .btn-success { background: #28a745; }
         .btn-danger { background: #dc3545; }
         .btn-warning { background: #ffc107; color: #212529; }
+        .btn-secondary { background: #6c757d; }
+        .btn-info { background: #17a2b8; }
         
         .size-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 8px;
-            margin: 15px 0;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 6px;
+            margin: 10px 0;
         }
         
         .size-btn {
-            padding: 12px;
+            padding: 10px 5px;
             text-align: center;
             border: 2px solid #dee2e6;
             background: white;
             cursor: pointer;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+        
+        .size-btn:active {
+            transform: scale(0.95);
         }
         
         .size-btn.selected {
             background: #007bff;
             color: white;
             border-color: #007bff;
-        }
-        
-        .message {
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .error {
-            background: #f8d7da;
-            color: #721c24;
+            font-weight: bold;
         }
         
         .item {
             border: 1px solid #dee2e6;
-            padding: 15px;
+            padding: 12px;
             margin: 10px 0;
             border-radius: 10px;
             background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .item.sold {
+            background: #ffe6e6;
+            border-color: #dc3545;
         }
         
         .item h4 {
+            margin: 0 0 8px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+        
+        .item-detail {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        
+        .item-detail strong {
+            color: #495057;
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.9em;
+        }
+        
+        .message {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .dashboard-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .dashboard-card h3 {
+            margin: 0 0 8px 0;
+            color: #495057;
+            font-size: 0.9em;
+        }
+        
+        .dashboard-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
+        .neutral { color: #6c757d; }
+        
+        .search-box {
+            margin: 10px 0;
+        }
+        
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .scanner-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .scanner-box h3 {
             margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .scanner-box button {
+            background: white;
+            color: #667eea;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .stockx-box {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .stockx-box h5 {
+            margin: 0 0 8px 0;
+            font-size: 1em;
+        }
+        
+        .stockx-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+        }
+        
+        .stockx-item {
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5em; }
+            .content { padding: 10px; }
+            .section { padding: 12px; }
+            .dashboard-value { font-size: 1.5em; }
         }
     </style>
 </head>
@@ -186,13 +365,15 @@
     <div class="container">
         <div class="header">
             <h1>🔥 Sneaker Inventar Pro</h1>
-            <p>Professionelles Sneaker-Management</p>
+            <p style="font-size: 0.9em; opacity: 0.9;">Professionelles Sneaker-Management</p>
         </div>
         
         <div class="tabs">
             <button class="tab active" onclick="showTab('add')">📦 Erfassen</button>
             <button class="tab" onclick="showTab('inventory')">📋 Inventar</button>
-            <button class="tab" onclick="showTab('settings')">⚙️ Einstellungen</button>
+            <button class="tab" onclick="showTab('sales')">💰 Verkäufe</button>
+            <button class="tab" onclick="showTab('dashboard')">📊 Dashboard</button>
+            <button class="tab" onclick="showTab('settings')">⚙️ Settings</button>
         </div>
         
         <div class="content">
@@ -200,88 +381,354 @@
             
             <!-- ADD TAB -->
             <div id="add" class="tab-content active">
+                <!-- Scanner -->
+                <div class="scanner-box">
+                    <h3>📸 Schnell-Erfassung</h3>
+                    <button onclick="startScanner()">📷 Kamera Scanner</button>
+                    <button onclick="document.getElementById('photoInput').click()">🖼️ Foto hochladen</button>
+                    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto()">
+                    
+                    <div id="scannerPreview" style="display: none;">
+                        <video id="video" autoplay playsinline></video>
+                        <canvas id="canvas" style="display: none;"></canvas>
+                        <button onclick="captureFrame()" class="btn-success">📸 Aufnehmen</button>
+                        <button onclick="stopScanner()" class="btn-danger">❌ Beenden</button>
+                    </div>
+                </div>
+                
                 <div class="section">
-                    <h2>Artikel erfassen</h2>
+                    <h2>📝 Grunddaten</h2>
                     
-                    <label>SKU:</label>
-                    <input type="text" id="sku" placeholder="z.B. DD7117-100">
+                    <div class="input-row">
+                        <div>
+                            <label>SKU / Artikelnummer*:</label>
+                            <input type="text" id="sku" placeholder="z.B. DD7117-100">
+                        </div>
+                        <div>
+                            <label>Produktname*:</label>
+                            <input type="text" id="productName" placeholder="z.B. Nike Air Force 1">
+                        </div>
+                    </div>
                     
-                    <label>Produktname:</label>
-                    <input type="text" id="productName" placeholder="z.B. Nike Air Force 1">
+                    <div class="input-row">
+                        <div>
+                            <label>Marke:</label>
+                            <select id="brand">
+                                <option>Nike</option>
+                                <option>Adidas</option>
+                                <option>Jordan</option>
+                                <option>Yeezy</option>
+                                <option>New Balance</option>
+                                <option>ASICS</option>
+                                <option>Puma</option>
+                                <option>Vans</option>
+                                <option>Converse</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Farbe:</label>
+                            <input type="text" id="color" placeholder="z.B. White/Black">
+                        </div>
+                    </div>
                     
-                    <label>Marke:</label>
-                    <select id="brand">
-                        <option value="Nike">Nike</option>
-                        <option value="Adidas">Adidas</option>
-                        <option value="Jordan">Jordan</option>
-                    </select>
-                    
-                    <label>Größe:</label>
+                    <div class="input-row">
+                        <div>
+                            <label>Retail Preis (EUR):</label>
+                            <input type="number" id="retailPrice" placeholder="0" step="0.01">
+                        </div>
+                        <div>
+                            <label>Release Date:</label>
+                            <input type="date" id="releaseDate">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- StockX Preise -->
+                <div class="section">
+                    <h2>📈 StockX Marktpreise (optional)</h2>
+                    <div class="input-row">
+                        <div>
+                            <label>Letzter Verkauf (EUR):</label>
+                            <input type="number" id="lastSale" placeholder="0" step="1" onchange="calcProfit()">
+                        </div>
+                        <div>
+                            <label>Höchstes Gebot (EUR):</label>
+                            <input type="number" id="highestBid" placeholder="0" step="1" onchange="calcProfit()">
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div>
+                            <label>Niedrigste Forderung (EUR):</label>
+                            <input type="number" id="lowestAsk" placeholder="0" step="1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>👟 Größe*</h2>
                     <div class="size-grid" id="sizeGrid"></div>
+                </div>
+                
+                <div class="section">
+                    <h2>🛒 Einkauf</h2>
+                    <div class="input-row">
+                        <div>
+                            <label>Einkaufspreis* (EUR):</label>
+                            <input type="number" id="purchasePrice" placeholder="0" step="0.01" onchange="calcProfit()">
+                        </div>
+                        <div>
+                            <label>Einkaufsdatum:</label>
+                            <input type="date" id="purchaseDate">
+                        </div>
+                    </div>
                     
-                    <label>Einkaufspreis (EUR):</label>
-                    <input type="number" id="purchasePrice" placeholder="0">
+                    <div class="input-row">
+                        <div>
+                            <label>Lagerort / Händler:</label>
+                            <input type="text" id="location" placeholder="z.B. Nike Store, Regal A1">
+                        </div>
+                    </div>
                     
-                    <label>Lagerort:</label>
-                    <input type="text" id="location" placeholder="z.B. Regal A1">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="includeVat" onchange="calcProfit()">
+                        <label for="includeVat" style="margin: 0;">Preis enthält MwSt. (19%)</label>
+                    </div>
                     
-                    <button onclick="saveItem()" class="btn-success">💾 Speichern</button>
-                    <button onclick="resetForm()">🔄 Zurücksetzen</button>
+                    <div id="profitBox" style="display: none; margin-top: 10px; padding: 10px; background: #d1ecf1; border-radius: 6px;">
+                        <strong>💰 Potenzieller Gewinn:</strong> <span id="profitValue"></span>
+                    </div>
+                    
+                    <label>Notizen:</label>
+                    <textarea id="notes" rows="2" placeholder="Optionale Notizen..."></textarea>
+                    
+                    <button onclick="saveItem()" class="btn-success" style="width: 100%; font-size: 1.1em; margin-top: 10px;">💾 Artikel speichern</button>
+                    <button onclick="resetForm()" class="btn-secondary" style="width: 100%;">🔄 Zurücksetzen</button>
                 </div>
             </div>
             
             <!-- INVENTORY TAB -->
             <div id="inventory" class="tab-content">
                 <div class="section">
-                    <h2>Inventar</h2>
-                    <button onclick="loadInventory()" class="btn-success">🔄 Laden</button>
-                    <button onclick="exportCSV()" class="btn-warning">📊 CSV Export</button>
+                    <h2>📦 Inventar</h2>
+                    
+                    <div style="margin-bottom: 10px;">
+                        <button onclick="loadInventory()" class="btn-success">🔄 Aktualisieren</button>
+                        <button onclick="exportInventoryCSV()" class="btn-warning">📊 CSV Export</button>
+                    </div>
+                    
+                    <div class="search-box">
+                        <label>Suche:</label>
+                        <input type="text" id="searchInput" placeholder="Name, SKU, Größe..." onkeyup="searchInventory()">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div>
+                            <label>Status:</label>
+                            <select id="statusFilter" onchange="searchInventory()">
+                                <option value="all">Alle</option>
+                                <option value="available">Verfügbar</option>
+                                <option value="sold">Verkauft</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Marke:</label>
+                            <select id="brandFilter" onchange="searchInventory()">
+                                <option value="all">Alle</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Sortierung:</label>
+                            <select id="sortSelect" onchange="searchInventory()">
+                                <option value="date-desc">Neueste zuerst</option>
+                                <option value="date-asc">Älteste zuerst</option>
+                                <option value="price-desc">Preis absteigend</option>
+                                <option value="price-asc">Preis aufsteigend</option>
+                                <option value="name">Name A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+                    
                     <div id="inventoryList"></div>
+                </div>
+            </div>
+            
+            <!-- SALES TAB -->
+            <div id="sales" class="tab-content">
+                <div class="section">
+                    <h2>💰 Verkauf erfassen</h2>
+                    
+                    <label>Artikel:</label>
+                    <select id="saleItem">
+                        <option value="">-- Wählen --</option>
+                    </select>
+                    
+                    <div class="input-row" style="margin-top: 10px;">
+                        <div>
+                            <label>Verkaufspreis (EUR):</label>
+                            <input type="number" id="salePrice" placeholder="0" step="0.01">
+                        </div>
+                        <div>
+                            <label>Verkaufsdatum:</label>
+                            <input type="date" id="saleDate">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div>
+                            <label>Plattform:</label>
+                            <select id="salePlatform">
+                                <option>StockX</option>
+                                <option>GOAT</option>
+                                <option>eBay</option>
+                                <option>Kleiderkreisel</option>
+                                <option>Instagram</option>
+                                <option>Privat</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Gebühren (EUR):</label>
+                            <input type="number" id="saleFees" placeholder="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <button onclick="recordSale()" class="btn-success" style="width: 100%; margin-top: 10px;">💰 Verkauf erfassen</button>
+                </div>
+                
+                <div class="section">
+                    <h2>📊 Verkaufshistorie</h2>
+                    <button onclick="loadSales()" class="btn-success">🔄 Aktualisieren</button>
+                    <button onclick="exportSalesCSV()" class="btn-warning">📊 CSV Export</button>
+                    <div id="salesList"></div>
+                </div>
+            </div>
+            
+            <!-- DASHBOARD TAB -->
+            <div id="dashboard" class="tab-content">
+                <div class="section">
+                    <h2>📊 Performance</h2>
+                    <div class="dashboard-grid" id="dashboardStats"></div>
+                </div>
+                
+                <div class="section">
+                    <h2>🏆 Top & Risiko</h2>
+                    <div id="performanceAnalysis"></div>
                 </div>
             </div>
             
             <!-- SETTINGS TAB -->
             <div id="settings" class="tab-content">
                 <div class="section">
-                    <h2>Einstellungen</h2>
-                    <button onclick="exportBackup()" class="btn-success">💾 Backup erstellen</button>
-                    <button onclick="document.getElementById('importFile').click()">📁 Backup laden</button>
+                    <h2>📁 Backup & Import</h2>
+                    
+                    <button onclick="exportBackup()" class="btn-success" style="width: 100%; margin: 5px 0;">💾 Backup erstellen (JSON)</button>
+                    <button onclick="document.getElementById('importFile').click()" class="btn-info" style="width: 100%; margin: 5px 0;">📁 Backup laden</button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importBackup()">
                     
-                    <h3 style="margin-top: 20px;">CSV Import</h3>
-                    <button onclick="document.getElementById('csvFile').click()" class="btn-warning">📊 CSV hochladen</button>
+                    <hr style="margin: 15px 0;">
+                    
+                    <h3 style="margin: 10px 0;">📊 CSV Import</h3>
+                    <p style="font-size: 0.85em; color: #6c757d; margin-bottom: 10px;">
+                        Importiere deinen Bestand aus einer CSV-Datei.<br>
+                        Spalten: SKU, Name, Size, Brand, Color, Place_of_Purchase, Purchased_at
+                    </p>
+                    <button onclick="document.getElementById('csvFile').click()" class="btn-warning" style="width: 100%;">📊 CSV hochladen</button>
                     <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="importCSV()">
+                    
+                    <hr style="margin: 15px 0;">
+                    
+                    <h3 style="margin: 10px 0;">🗑️ Daten löschen</h3>
+                    <button onclick="clearAll()" class="btn-danger" style="width: 100%;">⚠️ Alle Daten löschen</button>
+                </div>
+                
+                <div class="section">
+                    <h2>📊 Statistiken</h2>
+                    <div id="appStats"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        console.log('✅ App gestartet!');
+        console.log('✅ Sneaker Inventar Pro gestartet');
         
         let inventory = JSON.parse(localStorage.getItem('inventory') || '[]');
+        let sales = JSON.parse(localStorage.getItem('sales') || '[]');
         let selectedSize = null;
+        let stream = null;
         
-        const sizes = ['38', '38.5', '39', '40', '40.5', '41', '42', '42.5', '43', '44', '44.5', '45', '46'];
+        const sizes = ['35','35.5','36','36.5','37','37.5','38','38.5','39','39.5','40','40.5','41','41.5','42','42.5','43','43.5','44','44.5','45','45.5','46','46.5','47','47.5','48'];
         
-        // Initialisierung
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ DOM geladen');
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
             createSizeGrid();
+            document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('saleDate').value = new Date().toISOString().split('T')[0];
+            updateSaleItems();
+            updateAppStats();
         });
         
         // Tabs
         function showTab(name) {
-            console.log('Tab wechsel:', name);
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById(name).classList.add('active');
             
             if (name === 'inventory') loadInventory();
+            if (name === 'sales') { updateSaleItems(); loadSales(); }
+            if (name === 'dashboard') updateDashboard();
+            if (name === 'settings') updateAppStats();
         }
         
-        // Größenraster
+        // Scanner
+        async function startScanner() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' }
+                });
+                document.getElementById('video').srcObject = stream;
+                document.getElementById('scannerPreview').style.display = 'block';
+                showMessage('📸 Kamera gestartet', 'success');
+            } catch (e) {
+                showMessage('❌ Kamera-Zugriff verweigert. Nutze Foto-Upload!', 'error');
+            }
+        }
+        
+        function stopScanner() {
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+                stream = null;
+            }
+            document.getElementById('scannerPreview').style.display = 'none';
+        }
+        
+        function captureFrame() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            const sku = prompt('📸 Foto aufgenommen! Bitte SKU vom Label eingeben:');
+            if (sku) {
+                document.getElementById('sku').value = sku.toUpperCase();
+                showMessage('✅ SKU eingetragen!', 'success');
+            }
+            stopScanner();
+        }
+        
+        function handlePhoto() {
+            const file = document.getElementById('photoInput').files[0];
+            if (!file) return;
+            
+            const sku = prompt('📸 Foto hochgeladen! Bitte SKU vom Label eingeben:');
+            if (sku) {
+                document.getElementById('sku').value = sku.toUpperCase();
+                showMessage('✅ SKU eingetragen!', 'success');
+            }
+        }
+        
+        // Größen
         function createSizeGrid() {
             const grid = document.getElementById('sizeGrid');
             grid.innerHTML = '';
@@ -296,7 +743,25 @@
                 };
                 grid.appendChild(btn);
             });
-            console.log('✅ Größenraster erstellt');
+        }
+        
+        // Gewinn berechnen
+        function calcProfit() {
+            const purchase = parseFloat(document.getElementById('purchasePrice').value) || 0;
+            const bid = parseFloat(document.getElementById('highestBid').value) || 0;
+            const vat = document.getElementById('includeVat').checked;
+            
+            if (purchase > 0 && bid > 0) {
+                const net = vat ? purchase / 1.19 : purchase;
+                const profit = bid - net;
+                const percent = ((profit / net) * 100).toFixed(1);
+                const color = profit > 0 ? 'positive' : 'negative';
+                
+                document.getElementById('profitValue').innerHTML = `<span class="${color}">€${profit.toFixed(2)} (${percent}%)</span>`;
+                document.getElementById('profitBox').style.display = 'block';
+            } else {
+                document.getElementById('profitBox').style.display = 'none';
+            }
         }
         
         // Speichern
@@ -306,19 +771,31 @@
             const price = document.getElementById('purchasePrice').value;
             
             if (!sku || !name || !selectedSize || !price) {
-                showMessage('Bitte alle Felder ausfüllen!', 'error');
+                showMessage('❌ Bitte SKU, Name, Größe und Preis ausfüllen!', 'error');
                 return;
             }
             
             const item = {
                 id: Date.now(),
                 sku: sku.toUpperCase(),
-                name: name,
+                name,
                 brand: document.getElementById('brand').value,
+                color: document.getElementById('color').value,
+                retailPrice: parseFloat(document.getElementById('retailPrice').value) || 0,
+                releaseDate: document.getElementById('releaseDate').value,
                 size: selectedSize,
                 purchasePrice: parseFloat(price),
+                includeVat: document.getElementById('includeVat').checked,
                 location: document.getElementById('location').value,
-                date: new Date().toISOString().split('T')[0]
+                date: document.getElementById('purchaseDate').value,
+                notes: document.getElementById('notes').value,
+                stockx: {
+                    lastSale: parseFloat(document.getElementById('lastSale').value) || 0,
+                    highestBid: parseFloat(document.getElementById('highestBid').value) || 0,
+                    lowestAsk: parseFloat(document.getElementById('lowestAsk').value) || 0
+                },
+                status: 'available',
+                added: new Date().toISOString()
             };
             
             inventory.push(item);
@@ -326,81 +803,357 @@
             
             showMessage('✅ Artikel gespeichert!', 'success');
             resetForm();
+            updateSaleItems();
         }
         
-        // Reset
         function resetForm() {
-            document.getElementById('sku').value = '';
-            document.getElementById('productName').value = '';
-            document.getElementById('purchasePrice').value = '';
-            document.getElementById('location').value = '';
+            ['sku','productName','color','retailPrice','releaseDate','purchasePrice','location','notes','lastSale','highestBid','lowestAsk'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('includeVat').checked = false;
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
             selectedSize = null;
+            document.getElementById('profitBox').style.display = 'none';
         }
         
-        // Inventar laden
+        // Inventar
         function loadInventory() {
+            updateBrandFilter();
+            searchInventory();
+        }
+        
+        function updateBrandFilter() {
+            const brands = [...new Set(inventory.map(i => i.brand))].sort();
+            const filter = document.getElementById('brandFilter');
+            filter.innerHTML = '<option value="all">Alle</option>';
+            brands.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b;
+                opt.textContent = b;
+                filter.appendChild(opt);
+            });
+        }
+        
+        function searchInventory() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const brand = document.getElementById('brandFilter').value;
+            const sort = document.getElementById('sortSelect').value;
+            
+            let filtered = inventory.filter(item => {
+                const text = `${item.name} ${item.sku} ${item.size} ${item.location}`.toLowerCase();
+                const matchSearch = !search || text.includes(search);
+                const matchStatus = status === 'all' || item.status === status;
+                const matchBrand = brand === 'all' || item.brand === brand;
+                return matchSearch && matchStatus && matchBrand;
+            });
+            
+            // Sortierung
+            filtered.sort((a, b) => {
+                if (sort === 'date-desc') return new Date(b.date) - new Date(a.date);
+                if (sort === 'date-asc') return new Date(a.date) - new Date(b.date);
+                if (sort === 'price-desc') return b.purchasePrice - a.purchasePrice;
+                if (sort === 'price-asc') return a.purchasePrice - b.purchasePrice;
+                if (sort === 'name') return a.name.localeCompare(b.name);
+                return 0;
+            });
+            
             const container = document.getElementById('inventoryList');
             container.innerHTML = '';
             
-            if (inventory.length === 0) {
-                container.innerHTML = '<p>Keine Artikel vorhanden</p>';
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">Keine Artikel gefunden</p>';
                 return;
             }
             
-            inventory.forEach((item, i) => {
+            filtered.forEach((item, idx) => {
+                const realIdx = inventory.indexOf(item);
+                const div = document.createElement('div');
+                div.className = `item ${item.status === 'sold' ? 'sold' : ''}`;
+                
+                const netPrice = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
+                const profit = item.stockx?.highestBid ? (item.stockx.highestBid - netPrice).toFixed(2) : null;
+                
+                div.innerHTML = `
+                    <h4>${item.name} ${item.status === 'sold' ? '[VERKAUFT]' : ''}</h4>
+                    <div class="item-details">
+                        <div class="item-detail"><strong>SKU:</strong> ${item.sku}</div>
+                        <div class="item-detail"><strong>Größe:</strong> ${item.size}</div>
+                        <div class="item-detail"><strong>Marke:</strong> ${item.brand}</div>
+                        ${item.color ? `<div class="item-detail"><strong>Farbe:</strong> ${item.color}</div>` : ''}
+                        <div class="item-detail"><strong>Einkauf:</strong> €${item.purchasePrice}${item.includeVat ? ' (inkl.)' : ''}</div>
+                        ${item.location ? `<div class="item-detail"><strong>Lagerort:</strong> ${item.location}</div>` : ''}
+                        <div class="item-detail"><strong>Datum:</strong> ${item.date}</div>
+                        ${profit ? `<div class="item-detail"><strong>Potenzial:</strong> <span class="${parseFloat(profit) > 0 ? 'positive' : 'negative'}">€${profit}</span></div>` : ''}
+                    </div>
+                    ${item.stockx && (item.stockx.lastSale || item.stockx.highestBid) ? `
+                        <div class="stockx-box">
+                            <h5>📈 StockX</h5>
+                            <div class="stockx-grid">
+                                ${item.stockx.lastSale ? `<div class="stockx-item"><small>Letzter Verkauf</small><br><strong>€${item.stockx.lastSale}</strong></div>` : ''}
+                                ${item.stockx.highestBid ? `<div class="stockx-item"><small>Höchstes Gebot</small><br><strong>€${item.stockx.highestBid}</strong></div>` : ''}
+                                ${item.stockx.lowestAsk ? `<div class="stockx-item"><small>Niedrigste Forderung</small><br><strong>€${item.stockx.lowestAsk}</strong></div>` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${item.notes ? `<p style="margin-top: 8px; font-size: 0.85em; font-style: italic; color: #6c757d;">${item.notes}</p>` : ''}
+                    <div style="margin-top: 10px;">
+                        <button onclick="deleteItem(${realIdx})" class="btn-danger">🗑️ Löschen</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            
+            showMessage(`${filtered.length} von ${inventory.length} Artikeln`, 'info');
+        }
+        
+        function deleteItem(idx) {
+            if (confirm('Wirklich löschen?')) {
+                inventory.splice(idx, 1);
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                searchInventory();
+                updateSaleItems();
+            }
+        }
+        
+        // Verkäufe
+        function updateSaleItems() {
+            const select = document.getElementById('saleItem');
+            select.innerHTML = '<option value="">-- Wählen --</option>';
+            inventory.filter(i => i.status === 'available').forEach((item, idx) => {
+                const realIdx = inventory.indexOf(item);
+                const opt = document.createElement('option');
+                opt.value = realIdx;
+                opt.textContent = `${item.name} - ${item.sku} - ${item.size}`;
+                select.appendChild(opt);
+            });
+        }
+        
+        function recordSale() {
+            const idx = document.getElementById('saleItem').value;
+            const price = parseFloat(document.getElementById('salePrice').value);
+            const date = document.getElementById('saleDate').value;
+            const fees = parseFloat(document.getElementById('saleFees').value) || 0;
+            
+            if (!idx || !price || !date) {
+                showMessage('❌ Bitte Artikel, Preis und Datum ausfüllen', 'error');
+                return;
+            }
+            
+            const item = inventory[idx];
+            const netPurchase = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
+            const profit = price - fees - netPurchase;
+            
+            const sale = {
+                id: Date.now(),
+                itemId: item.id,
+                name: item.name,
+                sku: item.sku,
+                size: item.size,
+                purchasePrice: item.purchasePrice,
+                includeVat: item.includeVat,
+                salePrice: price,
+                fees,
+                profit,
+                platform: document.getElementById('salePlatform').value,
+                date,
+                recorded: new Date().toISOString()
+            };
+            
+            sales.push(sale);
+            localStorage.setItem('sales', JSON.stringify(sales));
+            
+            inventory[idx].status = 'sold';
+            inventory[idx].saleDate = date;
+            inventory[idx].salePrice = price;
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            
+            showMessage(`✅ Verkauf erfasst! Gewinn: €${profit.toFixed(2)}`, 'success');
+            
+            document.getElementById('saleItem').value = '';
+            document.getElementById('salePrice').value = '';
+            document.getElementById('saleFees').value = '';
+            
+            updateSaleItems();
+        }
+        
+        function loadSales() {
+            const container = document.getElementById('salesList');
+            container.innerHTML = '';
+            
+            if (sales.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">Keine Verkäufe</p>';
+                return;
+            }
+            
+            [...sales].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((sale, idx) => {
+                const realIdx = sales.indexOf(sale);
                 const div = document.createElement('div');
                 div.className = 'item';
+                const color = sale.profit > 0 ? 'positive' : 'negative';
+                
                 div.innerHTML = `
-                    <h4>${item.name}</h4>
-                    <p><strong>SKU:</strong> ${item.sku} | <strong>Größe:</strong> ${item.size}</p>
-                    <p><strong>Preis:</strong> €${item.purchasePrice} | <strong>Lagerort:</strong> ${item.location || '-'}</p>
-                    <button onclick="deleteItem(${i})" class="btn-danger">🗑️ Löschen</button>
+                    <h4>${sale.name}</h4>
+                    <div class="item-details">
+                        <div class="item-detail"><strong>SKU:</strong> ${sale.sku}</div>
+                        <div class="item-detail"><strong>Größe:</strong> ${sale.size}</div>
+                        <div class="item-detail"><strong>Einkauf:</strong> €${sale.purchasePrice}</div>
+                        <div class="item-detail"><strong>Verkauf:</strong> €${sale.salePrice}</div>
+                        <div class="item-detail"><strong>Gebühren:</strong> €${sale.fees}</div>
+                        <div class="item-detail"><strong>Gewinn:</strong> <span class="${color}">€${sale.profit.toFixed(2)}</span></div>
+                        <div class="item-detail"><strong>Plattform:</strong> ${sale.platform}</div>
+                        <div class="item-detail"><strong>Datum:</strong> ${sale.date}</div>
+                    </div>
+                    <button onclick="deleteSale(${realIdx})" class="btn-danger">🗑️ Löschen</button>
                 `;
                 container.appendChild(div);
             });
         }
         
-        // Löschen
-        function deleteItem(index) {
-            if (confirm('Wirklich löschen?')) {
-                inventory.splice(index, 1);
-                localStorage.setItem('inventory', JSON.stringify(inventory));
-                loadInventory();
-                showMessage('Artikel gelöscht', 'success');
+        function deleteSale(idx) {
+            if (confirm('Verkauf löschen?')) {
+                const sale = sales[idx];
+                const item = inventory.find(i => i.id === sale.itemId);
+                if (item) {
+                    item.status = 'available';
+                    delete item.saleDate;
+                    delete item.salePrice;
+                    localStorage.setItem('inventory', JSON.stringify(inventory));
+                }
+                sales.splice(idx, 1);
+                localStorage.setItem('sales', JSON.stringify(sales));
+                loadSales();
+                updateSaleItems();
             }
         }
         
+        // Dashboard
+        function updateDashboard() {
+            const total = inventory.length;
+            const available = inventory.filter(i => i.status === 'available').length;
+            const sold = inventory.filter(i => i.status === 'sold').length;
+            
+            const investment = inventory.reduce((sum, i) => sum + (i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice), 0);
+            const marketValue = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((sum, i) => sum + i.stockx.highestBid, 0);
+            const unrealized = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((sum, i) => {
+                const net = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice;
+                return sum + (i.stockx.highestBid - net);
+            }, 0);
+            
+            const totalSales = sales.reduce((sum, s) => sum + s.salePrice, 0);
+            const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
+            
+            document.getElementById('dashboardStats').innerHTML = `
+                <div class="dashboard-card">
+                    <h3>📦 Inventar</h3>
+                    <div class="dashboard-value neutral">${total}</div>
+                    <p style="font-size: 0.8em;">${available} verfügbar</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>💰 Investition</h3>
+                    <div class="dashboard-value neutral">€${investment.toFixed(0)}</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>💎 Marktwert</h3>
+                    <div class="dashboard-value ${marketValue > investment ? 'positive' : 'neutral'}">€${marketValue.toFixed(0)}</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>📈 Unrealisiert</h3>
+                    <div class="dashboard-value ${unrealized > 0 ? 'positive' : 'negative'}">€${unrealized.toFixed(0)}</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>💵 Verkäufe</h3>
+                    <div class="dashboard-value neutral">€${totalSales.toFixed(0)}</div>
+                    <p style="font-size: 0.8em;">${sold} Stück</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>🎯 Gewinn</h3>
+                    <div class="dashboard-value ${totalProfit > 0 ? 'positive' : 'negative'}">€${totalProfit.toFixed(0)}</div>
+                </div>
+            `;
+            
+            // Top/Risk
+            const topSales = [...sales].sort((a, b) => b.profit - a.profit).slice(0, 3);
+            const topPotential = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).map(i => {
+                const net = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice;
+                return { ...i, potential: i.stockx.highestBid - net };
+            }).sort((a, b) => b.potential - a.potential).slice(0, 3);
+            
+            document.getElementById('performanceAnalysis').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <h4 style="margin-bottom: 10px;">🏆 Top Verkäufe</h4>
+                        ${topSales.length ? topSales.map(s => `
+                            <div class="item-detail" style="margin: 5px 0;">
+                                <strong>${s.name}</strong><br>
+                                <span class="positive">+€${s.profit.toFixed(2)}</span>
+                            </div>
+                        `).join('') : '<p style="color: #6c757d; font-size: 0.85em;">Keine Verkäufe</p>'}
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 10px;">💎 Top Potenzial</h4>
+                        ${topPotential.length ? topPotential.map(i => `
+                            <div class="item-detail" style="margin: 5px 0;">
+                                <strong>${i.name}</strong><br>
+                                <span class="${i.potential > 0 ? 'positive' : 'negative'}">€${i.potential.toFixed(2)}</span>
+                            </div>
+                        `).join('') : '<p style="color: #6c757d; font-size: 0.85em;">Keine Daten</p>'}
+                    </div>
+                </div>
+            `;
+        }
+        
         // CSV Export
-        function exportCSV() {
-            if (inventory.length === 0) {
-                showMessage('Kein Inventar vorhanden', 'error');
+        function exportInventoryCSV() {
+            if (!inventory.length) {
+                showMessage('❌ Kein Inventar', 'error');
                 return;
             }
             
-            const headers = ['SKU', 'Name', 'Marke', 'Größe', 'Preis', 'Lagerort', 'Datum'];
             const csv = [
-                headers.join(','),
-                ...inventory.map(item => [
-                    item.sku,
-                    `"${item.name}"`,
-                    item.brand,
-                    item.size,
-                    item.purchasePrice,
-                    `"${item.location || ''}"`,
-                    item.date
+                'SKU,Name,Marke,Farbe,Größe,Status,Einkaufspreis,MwSt,Retail,Lagerort,Datum',
+                ...inventory.map(i => [
+                    i.sku,
+                    `"${i.name}"`,
+                    i.brand,
+                    i.color || '',
+                    i.size,
+                    i.status,
+                    i.purchasePrice,
+                    i.includeVat ? 'Ja' : 'Nein',
+                    i.retailPrice || '',
+                    `"${i.location || ''}"`,
+                    i.date
                 ].join(','))
             ].join('\n');
             
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sneaker-inventar-${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            
+            download(csv, `inventar-${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
             showMessage('✅ CSV exportiert!', 'success');
+        }
+        
+        function exportSalesCSV() {
+            if (!sales.length) {
+                showMessage('❌ Keine Verkäufe', 'error');
+                return;
+            }
+            
+            const csv = [
+                'SKU,Name,Größe,Einkauf,Verkauf,Gebühren,Gewinn,Plattform,Datum',
+                ...sales.map(s => [
+                    s.sku,
+                    `"${s.name}"`,
+                    s.size,
+                    s.purchasePrice,
+                    s.salePrice,
+                    s.fees,
+                    s.profit.toFixed(2),
+                    s.platform,
+                    s.date
+                ].join(','))
+            ].join('\n');
+            
+            download(csv, `verkäufe-${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+            showMessage('✅ Verkäufe CSV exportiert!', 'success');
         }
         
         // CSV Import
@@ -418,18 +1171,23 @@
                         const line = lines[i].trim();
                         if (!line) continue;
                         
-                        const parts = line.split(',');
+                        const parts = line.split(',').map(p => p.replace(/"/g, '').trim());
                         if (parts.length < 2) continue;
                         
                         const item = {
                             id: Date.now() + i,
-                            sku: parts[0]?.trim().toUpperCase() || '',
-                            name: parts[1]?.replace(/"/g, '').trim() || '',
-                            brand: parts[2]?.trim() || 'Nike',
-                            size: parts[3]?.trim() || '42',
-                            purchasePrice: parseFloat(parts[4]) || 0,
-                            location: parts[5]?.replace(/"/g, '').trim() || '',
-                            date: parts[6]?.trim() || new Date().toISOString().split('T')[0]
+                            sku: (parts[0] || '').toUpperCase(),
+                            name: parts[1] || '',
+                            brand: parts[3] || 'Nike',
+                            color: parts[4] || '',
+                            size: parts[2] || '42',
+                            purchasePrice: 0,
+                            includeVat: false,
+                            location: parts[5] || '',
+                            date: parts[6] || new Date().toISOString().split('T')[0],
+                            status: 'available',
+                            stockx: { lastSale: 0, highestBid: 0, lowestAsk: 0 },
+                            added: new Date().toISOString()
                         };
                         
                         if (item.sku && item.name) {
@@ -441,9 +1199,9 @@
                     localStorage.setItem('inventory', JSON.stringify(inventory));
                     showMessage(`✅ ${count} Artikel importiert!`, 'success');
                     
-                } catch (error) {
+                } catch (e) {
                     showMessage('❌ Import fehlgeschlagen', 'error');
-                    console.error(error);
+                    console.error(e);
                 }
             };
             reader.readAsText(file);
@@ -451,19 +1209,8 @@
         
         // Backup
         function exportBackup() {
-            const data = {
-                inventory: inventory,
-                exportDate: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sneaker-backup-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            
+            const data = { inventory, sales, exportDate: new Date().toISOString() };
+            download(JSON.stringify(data, null, 2), `backup-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
             showMessage('✅ Backup erstellt!', 'success');
         }
         
@@ -475,17 +1222,58 @@
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    inventory = data.inventory || [];
-                    localStorage.setItem('inventory', JSON.stringify(inventory));
-                    showMessage('✅ Backup geladen!', 'success');
-                } catch (error) {
-                    showMessage('❌ Backup fehlerhaft', 'error');
+                    if (confirm('Backup laden? Überschreibt aktuelle Daten!')) {
+                        inventory = data.inventory || [];
+                        sales = data.sales || [];
+                        localStorage.setItem('inventory', JSON.stringify(inventory));
+                        localStorage.setItem('sales', JSON.stringify(sales));
+                        showMessage('✅ Backup geladen!', 'success');
+                        updateSaleItems();
+                    }
+                } catch (e) {
+                    showMessage('❌ Ungültiges Backup', 'error');
                 }
             };
             reader.readAsText(file);
         }
         
-        // Nachrichten
+        function clearAll() {
+            if (confirm('ACHTUNG: Alle Daten löschen?')) {
+                inventory = [];
+                sales = [];
+                localStorage.clear();
+                showMessage('✅ Alle Daten gelöscht', 'success');
+                updateSaleItems();
+                updateAppStats();
+            }
+        }
+        
+        // Stats
+        function updateAppStats() {
+            const stats = {
+                items: inventory.length,
+                sales: sales.length,
+                storage: new Blob([JSON.stringify(inventory) + JSON.stringify(sales)]).size
+            };
+            
+            document.getElementById('appStats').innerHTML = `
+                <p><strong>Artikel:</strong> ${stats.items}</p>
+                <p><strong>Verkäufe:</strong> ${stats.sales}</p>
+                <p><strong>Speicher:</strong> ${(stats.storage / 1024).toFixed(2)} KB</p>
+            `;
+        }
+        
+        // Utils
+        function download(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
         function showMessage(text, type) {
             const msg = document.getElementById('message');
             msg.textContent = text;
@@ -494,7 +1282,7 @@
             setTimeout(() => msg.style.display = 'none', 3000);
         }
         
-        console.log('✅ Alle Funktionen geladen');
+        console.log('✅ App bereit');
     </script>
 </body>
 </html>
