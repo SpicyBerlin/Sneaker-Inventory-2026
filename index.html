@@ -8,392 +8,97 @@
     <title>Sneaker Inventar Pro</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 10px;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 1.8em;
-            font-weight: 300;
-            margin-bottom: 5px;
-        }
-        
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .tab {
-            flex: 1;
-            min-width: 100px;
-            padding: 12px 10px;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        
-        .tab:hover, .tab:active {
-            background: #e9ecef;
-        }
-        
-        .tab.active {
-            background: #007bff;
-            color: white;
-        }
-        
-        .content {
-            padding: 15px;
-        }
-        
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .section {
-            margin: 15px 0;
-            padding: 15px;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            background: #f8f9fa;
-        }
-        
-        .section h2 {
-            margin: 0 0 12px 0;
-            color: #495057;
-            font-size: 1.2em;
-        }
-        
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin: 10px 0;
-        }
-        
-        @media (min-width: 768px) {
-            .input-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #495057;
-            font-size: 0.9em;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 5px;
-            font-family: inherit;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 10px 0;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-        }
-        
-        button {
-            padding: 12px 16px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 5px 5px 5px 0;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-            touch-action: manipulation;
-        }
-        
-        button:active {
-            transform: scale(0.98);
-        }
-        
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 20px; text-align: center; }
+        .header h1 { font-size: 1.8em; font-weight: 300; margin-bottom: 5px; }
+        .tabs { display: flex; background: #f8f9fa; border-bottom: 2px solid #dee2e6; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .tab { flex: 1; min-width: 100px; padding: 12px 10px; text-align: center; cursor: pointer; border: none; background: none; font-size: 13px; font-weight: 500; transition: all 0.3s; white-space: nowrap; }
+        .tab:hover, .tab:active { background: #e9ecef; }
+        .tab.active { background: #007bff; color: white; }
+        .content { padding: 15px; }
+        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .section { margin: 15px 0; padding: 15px; border: 1px solid #e9ecef; border-radius: 10px; background: #f8f9fa; }
+        .section h2 { margin: 0 0 12px 0; color: #495057; font-size: 1.2em; }
+        .input-row { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 10px 0; }
+        @media (min-width: 768px) { .input-row { grid-template-columns: repeat(2, 1fr); } }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #495057; font-size: 0.9em; }
+        input, select, textarea { width: 100%; padding: 10px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; margin-bottom: 5px; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #007bff; }
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin: 10px 0; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin: 0; }
+        button { padding: 12px 16px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; margin: 5px 5px 5px 0; font-size: 14px; font-weight: 500; transition: all 0.2s; touch-action: manipulation; }
+        button:active { transform: scale(0.98); }
         .btn-success { background: #28a745; }
         .btn-danger { background: #dc3545; }
         .btn-warning { background: #ffc107; color: #212529; }
         .btn-secondary { background: #6c757d; }
         .btn-info { background: #17a2b8; }
-        
-        .size-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
-            gap: 6px;
-            margin: 10px 0;
-        }
-        
-        .size-btn {
-            padding: 10px 5px;
-            text-align: center;
-            border: 2px solid #dee2e6;
-            background: white;
-            cursor: pointer;
-            border-radius: 6px;
-            font-size: 13px;
-            transition: all 0.2s;
-            touch-action: manipulation;
-        }
-        
-        .size-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .size-btn.selected {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-            font-weight: bold;
-        }
-        
-        .size-btn.adidas-size {
-            border-color: #b0c4de;
-            background: #f0f4ff;
-        }
-        
-        .size-btn.adidas-size.selected {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-        
-        .item {
-            border: 1px solid #dee2e6;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 10px;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        .item.sold {
-            background: #ffe6e6;
-            border-color: #dc3545;
-        }
-        
-        .item h4 {
-            margin: 0 0 8px 0;
-            font-size: 1.1em;
-            color: #333;
-        }
-        
-        .item-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 8px;
-            margin: 10px 0;
-            font-size: 0.85em;
-        }
-        
-        .item-detail {
-            background: #f8f9fa;
-            padding: 8px;
-            border-radius: 5px;
-        }
-        
-        .item-detail strong {
-            color: #495057;
-            display: block;
-            margin-bottom: 2px;
-            font-size: 0.9em;
-        }
-        
-        .message {
-            padding: 12px;
-            margin: 12px 0;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.9em;
-        }
-        
+        .size-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(55px, 1fr)); gap: 6px; margin: 10px 0; }
+        .size-btn { padding: 10px 5px; text-align: center; border: 2px solid #dee2e6; background: white; cursor: pointer; border-radius: 6px; font-size: 13px; transition: all 0.2s; touch-action: manipulation; }
+        .size-btn:active { transform: scale(0.95); }
+        .size-btn.selected { background: #007bff; color: white; border-color: #007bff; font-weight: bold; }
+        .size-btn.adidas-size { border-color: #b0c4de; background: #f0f4ff; }
+        .size-btn.adidas-size.selected { background: #007bff; color: white; border-color: #007bff; }
+        .item { border: 1px solid #dee2e6; padding: 12px; margin: 10px 0; border-radius: 10px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .item.sold { background: #ffe6e6; border-color: #dc3545; }
+        .item h4 { margin: 0 0 8px 0; font-size: 1.1em; color: #333; }
+        .item-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin: 10px 0; font-size: 0.85em; }
+        .item-detail { background: #f8f9fa; padding: 8px; border-radius: 5px; }
+        .item-detail strong { color: #495057; display: block; margin-bottom: 2px; font-size: 0.9em; }
+        .message { padding: 12px; margin: 12px 0; border-radius: 8px; text-align: center; font-size: 0.9em; }
         .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
         .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
-        
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin: 15px 0;
-        }
-        
-        .dashboard-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        
-        .dashboard-card h3 {
-            margin: 0 0 8px 0;
-            color: #495057;
-            font-size: 0.9em;
-        }
-        
-        .dashboard-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            margin: 8px 0;
-        }
-        
-        .positive { color: #28a745; }
-        .negative { color: #dc3545; }
-        .neutral { color: #6c757d; }
-        
-        .search-box {
-            margin: 10px 0;
-        }
-        
-        .filter-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin: 10px 0;
-        }
-        
-        .scanner-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-        
-        .scanner-box h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-        }
-        
-        .scanner-box button {
-            background: white;
-            color: #667eea;
-            width: 100%;
-            margin: 5px 0;
-        }
-        
-        video {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
-        
-        .stockx-box {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 10px 0;
-        }
-        
-        .stockx-box h5 {
-            margin: 0 0 8px 0;
-            font-size: 1em;
-        }
-        
-        .stockx-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 8px;
-        }
-        
-        .stockx-item {
-            background: rgba(255,255,255,0.2);
-            padding: 8px;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 0.85em;
-        }
-        
-        .size-legend {
-            display: flex;
-            gap: 15px;
-            margin: 5px 0 10px 0;
-            font-size: 0.8em;
-            color: #6c757d;
-        }
-        
-        .size-legend span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .size-legend .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-            display: inline-block;
-        }
-        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 15px 0; }
+        .dashboard-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.08); text-align: center; }
+        .dashboard-card h3 { margin: 0 0 8px 0; color: #495057; font-size: 0.9em; }
+        .dashboard-value { font-size: 1.8em; font-weight: bold; margin: 8px 0; }
+        .positive { color: #28a745; } .negative { color: #dc3545; } .neutral { color: #6c757d; }
+        .search-box { margin: 10px 0; }
+        .filter-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 10px 0; }
+        .scanner-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; margin: 10px 0; }
+        .scanner-box h3 { margin: 0 0 10px 0; font-size: 1.1em; }
+        .scanner-box button { background: white; color: #667eea; width: 100%; margin: 5px 0; }
+        .scanner-box .scan-hint { font-size: 0.8em; opacity: 0.85; margin-top: 8px; line-height: 1.4; }
+        video { width: 100%; max-width: 400px; border-radius: 10px; margin: 10px 0; }
+        .stockx-box { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 12px; border-radius: 8px; margin: 10px 0; }
+        .stockx-box h5 { margin: 0 0 8px 0; font-size: 1em; }
+        .stockx-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; }
+        .stockx-item { background: rgba(255,255,255,0.2); padding: 8px; border-radius: 5px; text-align: center; font-size: 0.85em; }
+        .size-legend { display: flex; gap: 15px; margin: 5px 0 10px 0; font-size: 0.8em; color: #6c757d; }
+        .size-legend span { display: flex; align-items: center; gap: 4px; }
+        .size-legend .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
         .size-legend .dot-standard { background: white; border: 2px solid #dee2e6; }
         .size-legend .dot-adidas { background: #f0f4ff; border: 2px solid #b0c4de; }
-        
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.5em; }
-            .content { padding: 10px; }
-            .section { padding: 12px; }
-            .dashboard-value { font-size: 1.5em; }
-        }
+        .scan-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; gap: 15px; padding: 20px; }
+        .scan-overlay.active { display: flex; }
+        .scan-status { color: white; font-size: 1.2em; text-align: center; }
+        .scan-spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .scan-preview-img { max-width: 300px; max-height: 200px; border-radius: 10px; border: 3px solid white; }
+        .scan-result-box { background: white; border-radius: 12px; padding: 20px; max-width: 400px; width: 100%; max-height: 70vh; overflow-y: auto; }
+        .scan-result-box h3 { margin: 0 0 15px 0; color: #333; }
+        .scan-field { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 0.95em; }
+        .scan-field-label { color: #6c757d; font-weight: 500; }
+        .scan-field-value { font-weight: 700; color: #333; text-align: right; }
+        .scan-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .scan-actions button { flex: 1; }
+        .api-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center; padding: 20px; }
+        .api-modal.active { display: flex; }
+        .api-modal-box { background: white; border-radius: 16px; padding: 25px; max-width: 450px; width: 100%; }
+        .api-modal-box h3 { margin: 0 0 10px 0; color: #333; }
+        .api-modal-box p { color: #6c757d; font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; }
+        .api-modal-box input { font-family: monospace; font-size: 14px; }
+        @media (max-width: 768px) { .header h1 { font-size: 1.5em; } .content { padding: 10px; } .section { padding: 12px; } .dashboard-value { font-size: 1.5em; } }
     </style>
 </head>
 <body>
@@ -402,7 +107,6 @@
             <h1>🔥 Sneaker Inventar Pro</h1>
             <p style="font-size: 0.9em; opacity: 0.9;">Professionelles Sneaker-Management</p>
         </div>
-        
         <div class="tabs">
             <button class="tab active" onclick="showTab('add')">📦 Erfassen</button>
             <button class="tab" onclick="showTab('inventory')">📋 Inventar</button>
@@ -410,387 +114,436 @@
             <button class="tab" onclick="showTab('dashboard')">📊 Dashboard</button>
             <button class="tab" onclick="showTab('settings')">⚙️ Settings</button>
         </div>
-        
         <div class="content">
             <div id="message" style="display: none;"></div>
-            
             <!-- ADD TAB -->
             <div id="add" class="tab-content active">
-                <!-- Scanner -->
                 <div class="scanner-box">
-                    <h3>📸 Schnell-Erfassung</h3>
+                    <h3>📸 Schnell-Erfassung (KI-Erkennung)</h3>
                     <button onclick="startScanner()">📷 Kamera Scanner</button>
                     <button onclick="document.getElementById('photoInput').click()">🖼️ Foto hochladen</button>
                     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto()">
-                    
                     <div id="scannerPreview" style="display: none;">
                         <video id="video" autoplay playsinline></video>
                         <canvas id="canvas" style="display: none;"></canvas>
-                        <button onclick="captureFrame()" class="btn-success">📸 Aufnehmen</button>
-                        <button onclick="stopScanner()" class="btn-danger">❌ Beenden</button>
+                        <button onclick="captureFrame()" class="btn-success" style="color: white;">📸 Aufnehmen & Analysieren</button>
+                        <button onclick="stopScanner()" class="btn-danger" style="color: white;">❌ Beenden</button>
                     </div>
+                    <p class="scan-hint">📋 Fotografiere das Schuhlabel (Innenseite der Zunge). Die KI erkennt automatisch: SKU, Größe, Farbe, Modell & Marke.</p>
                 </div>
-                
                 <div class="section">
                     <h2>📝 Grunddaten</h2>
-                    
                     <div class="input-row">
-                        <div>
-                            <label>SKU / Artikelnummer*:</label>
-                            <input type="text" id="sku" placeholder="z.B. DD7117-100">
-                        </div>
-                        <div>
-                            <label>Produktname*:</label>
-                            <input type="text" id="productName" placeholder="z.B. Nike Air Force 1">
-                        </div>
+                        <div><label>SKU / Artikelnummer*:</label><input type="text" id="sku" placeholder="z.B. DD7117-100"></div>
+                        <div><label>Produktname*:</label><input type="text" id="productName" placeholder="z.B. Nike Air Force 1"></div>
                     </div>
-                    
                     <div class="input-row">
-                        <div>
-                            <label>Marke:</label>
-                            <select id="brand">
-                                <option>Nike</option>
-                                <option>Adidas</option>
-                                <option>Jordan</option>
-                                <option>Yeezy</option>
-                                <option>New Balance</option>
-                                <option>ASICS</option>
-                                <option>Puma</option>
-                                <option>Vans</option>
-                                <option>Converse</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Farbe:</label>
-                            <input type="text" id="color" placeholder="z.B. White/Black">
-                        </div>
+                        <div><label>Marke:</label><select id="brand"><option>Nike</option><option>Adidas</option><option>Jordan</option><option>Yeezy</option><option>New Balance</option><option>ASICS</option><option>Puma</option><option>Vans</option><option>Converse</option></select></div>
+                        <div><label>Farbe:</label><input type="text" id="color" placeholder="z.B. White/Black"></div>
                     </div>
-                    
                     <div class="input-row">
-                        <div>
-                            <label>Retail Preis (EUR):</label>
-                            <input type="number" id="retailPrice" placeholder="0" step="0.01">
-                        </div>
-                        <div>
-                            <label>Release Date:</label>
-                            <input type="date" id="releaseDate">
-                        </div>
+                        <div><label>Retail Preis (EUR):</label><input type="number" id="retailPrice" placeholder="0" step="0.01"></div>
+                        <div><label>Release Date:</label><input type="date" id="releaseDate"></div>
                     </div>
                 </div>
-                
-                <!-- StockX Preise -->
                 <div class="section">
                     <h2>📈 StockX Marktpreise (optional)</h2>
                     <div class="input-row">
-                        <div>
-                            <label>Letzter Verkauf (EUR):</label>
-                            <input type="number" id="lastSale" placeholder="0" step="1" onchange="calcProfit()">
-                        </div>
-                        <div>
-                            <label>Höchstes Gebot (EUR):</label>
-                            <input type="number" id="highestBid" placeholder="0" step="1" onchange="calcProfit()">
-                        </div>
+                        <div><label>Letzter Verkauf (EUR):</label><input type="number" id="lastSale" placeholder="0" step="1" onchange="calcProfit()"></div>
+                        <div><label>Höchstes Gebot (EUR):</label><input type="number" id="highestBid" placeholder="0" step="1" onchange="calcProfit()"></div>
                     </div>
                     <div class="input-row">
-                        <div>
-                            <label>Niedrigste Forderung (EUR):</label>
-                            <input type="number" id="lowestAsk" placeholder="0" step="1">
-                        </div>
+                        <div><label>Niedrigste Forderung (EUR):</label><input type="number" id="lowestAsk" placeholder="0" step="1"></div>
                     </div>
                 </div>
-                
                 <div class="section">
                     <h2>👟 Größe*</h2>
-                    <div class="size-legend">
-                        <span><span class="dot dot-standard"></span> Standard</span>
-                        <span><span class="dot dot-adidas"></span> Adidas EU (⅓/⅔)</span>
-                    </div>
+                    <div class="size-legend"><span><span class="dot dot-standard"></span> Standard</span><span><span class="dot dot-adidas"></span> Adidas EU (⅓/⅔)</span></div>
                     <div class="size-grid" id="sizeGrid"></div>
                 </div>
-                
                 <div class="section">
                     <h2>🛒 Einkauf</h2>
                     <div class="input-row">
-                        <div>
-                            <label>Einkaufspreis* (EUR):</label>
-                            <input type="number" id="purchasePrice" placeholder="0" step="0.01" onchange="calcProfit()">
-                        </div>
-                        <div>
-                            <label>Einkaufsdatum:</label>
-                            <input type="date" id="purchaseDate">
-                        </div>
+                        <div><label>Einkaufspreis* (EUR):</label><input type="number" id="purchasePrice" placeholder="0" step="0.01" onchange="calcProfit()"></div>
+                        <div><label>Einkaufsdatum:</label><input type="date" id="purchaseDate"></div>
                     </div>
-                    
                     <div class="input-row">
-                        <div>
-                            <label>Lagerort / Händler:</label>
-                            <input type="text" id="location" placeholder="z.B. Nike Store, Regal A1">
-                        </div>
+                        <div><label>Lagerort / Händler:</label><input type="text" id="location" placeholder="z.B. Nike Store, Regal A1"></div>
                     </div>
-                    
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="includeVat" onchange="calcProfit()">
-                        <label for="includeVat" style="margin: 0;">Preis enthält MwSt. (19%)</label>
-                    </div>
-                    
-                    <div id="profitBox" style="display: none; margin-top: 10px; padding: 10px; background: #d1ecf1; border-radius: 6px;">
-                        <strong>💰 Potenzieller Gewinn:</strong> <span id="profitValue"></span>
-                    </div>
-                    
+                    <div class="checkbox-group"><input type="checkbox" id="includeVat" onchange="calcProfit()"><label for="includeVat" style="margin: 0;">Preis enthält MwSt. (19%)</label></div>
+                    <div id="profitBox" style="display: none; margin-top: 10px; padding: 10px; background: #d1ecf1; border-radius: 6px;"><strong>💰 Potenzieller Gewinn:</strong> <span id="profitValue"></span></div>
                     <label>Notizen:</label>
                     <textarea id="notes" rows="2" placeholder="Optionale Notizen..."></textarea>
-                    
                     <button onclick="saveItem()" class="btn-success" style="width: 100%; font-size: 1.1em; margin-top: 10px;">💾 Artikel speichern</button>
                     <button onclick="resetForm()" class="btn-secondary" style="width: 100%;">🔄 Zurücksetzen</button>
                 </div>
             </div>
-            
             <!-- INVENTORY TAB -->
             <div id="inventory" class="tab-content">
                 <div class="section">
                     <h2>📦 Inventar</h2>
-                    
-                    <div style="margin-bottom: 10px;">
-                        <button onclick="loadInventory()" class="btn-success">🔄 Aktualisieren</button>
-                        <button onclick="exportInventoryCSV()" class="btn-warning">📊 CSV Export</button>
-                    </div>
-                    
-                    <div class="search-box">
-                        <label>Suche:</label>
-                        <input type="text" id="searchInput" placeholder="Name, SKU, Größe..." onkeyup="searchInventory()">
-                    </div>
-                    
+                    <div style="margin-bottom: 10px;"><button onclick="loadInventory()" class="btn-success">🔄 Aktualisieren</button><button onclick="exportInventoryCSV()" class="btn-warning">📊 CSV Export</button></div>
+                    <div class="search-box"><label>Suche:</label><input type="text" id="searchInput" placeholder="Name, SKU, Größe..." onkeyup="searchInventory()"></div>
                     <div class="filter-group">
-                        <div>
-                            <label>Status:</label>
-                            <select id="statusFilter" onchange="searchInventory()">
-                                <option value="all">Alle</option>
-                                <option value="available">Verfügbar</option>
-                                <option value="sold">Verkauft</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Marke:</label>
-                            <select id="brandFilter" onchange="searchInventory()">
-                                <option value="all">Alle</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Sortierung:</label>
-                            <select id="sortSelect" onchange="searchInventory()">
-                                <option value="date-desc">Neueste zuerst</option>
-                                <option value="date-asc">Älteste zuerst</option>
-                                <option value="price-desc">Preis absteigend</option>
-                                <option value="price-asc">Preis aufsteigend</option>
-                                <option value="name">Name A-Z</option>
-                            </select>
-                        </div>
+                        <div><label>Status:</label><select id="statusFilter" onchange="searchInventory()"><option value="all">Alle</option><option value="available">Verfügbar</option><option value="sold">Verkauft</option></select></div>
+                        <div><label>Marke:</label><select id="brandFilter" onchange="searchInventory()"><option value="all">Alle</option></select></div>
+                        <div><label>Sortierung:</label><select id="sortSelect" onchange="searchInventory()"><option value="date-desc">Neueste zuerst</option><option value="date-asc">Älteste zuerst</option><option value="price-desc">Preis absteigend</option><option value="price-asc">Preis aufsteigend</option><option value="name">Name A-Z</option></select></div>
                     </div>
-                    
                     <div id="inventoryList"></div>
                 </div>
             </div>
-            
             <!-- SALES TAB -->
             <div id="sales" class="tab-content">
                 <div class="section">
                     <h2>💰 Verkauf erfassen</h2>
-                    
-                    <label>Artikel:</label>
-                    <select id="saleItem">
-                        <option value="">-- Wählen --</option>
-                    </select>
-                    
+                    <label>Artikel:</label><select id="saleItem"><option value="">-- Wählen --</option></select>
                     <div class="input-row" style="margin-top: 10px;">
-                        <div>
-                            <label>Verkaufspreis (EUR):</label>
-                            <input type="number" id="salePrice" placeholder="0" step="0.01">
-                        </div>
-                        <div>
-                            <label>Verkaufsdatum:</label>
-                            <input type="date" id="saleDate">
-                        </div>
+                        <div><label>Verkaufspreis (EUR):</label><input type="number" id="salePrice" placeholder="0" step="0.01"></div>
+                        <div><label>Verkaufsdatum:</label><input type="date" id="saleDate"></div>
                     </div>
-                    
                     <div class="input-row">
-                        <div>
-                            <label>Plattform:</label>
-                            <select id="salePlatform">
-                                <option>StockX</option>
-                                <option>GOAT</option>
-                                <option>eBay</option>
-                                <option>Kleiderkreisel</option>
-                                <option>Instagram</option>
-                                <option>Privat</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Gebühren (EUR):</label>
-                            <input type="number" id="saleFees" placeholder="0" step="0.01">
-                        </div>
+                        <div><label>Plattform:</label><select id="salePlatform"><option>StockX</option><option>GOAT</option><option>eBay</option><option>Kleiderkreisel</option><option>Instagram</option><option>Privat</option></select></div>
+                        <div><label>Gebühren (EUR):</label><input type="number" id="saleFees" placeholder="0" step="0.01"></div>
                     </div>
-                    
                     <button onclick="recordSale()" class="btn-success" style="width: 100%; margin-top: 10px;">💰 Verkauf erfassen</button>
                 </div>
-                
                 <div class="section">
                     <h2>📊 Verkaufshistorie</h2>
-                    <button onclick="loadSales()" class="btn-success">🔄 Aktualisieren</button>
-                    <button onclick="exportSalesCSV()" class="btn-warning">📊 CSV Export</button>
+                    <button onclick="loadSales()" class="btn-success">🔄 Aktualisieren</button><button onclick="exportSalesCSV()" class="btn-warning">📊 CSV Export</button>
                     <div id="salesList"></div>
                 </div>
             </div>
-            
             <!-- DASHBOARD TAB -->
             <div id="dashboard" class="tab-content">
-                <div class="section">
-                    <h2>📊 Performance</h2>
-                    <div class="dashboard-grid" id="dashboardStats"></div>
-                </div>
-                
-                <div class="section">
-                    <h2>🏆 Top & Risiko</h2>
-                    <div id="performanceAnalysis"></div>
-                </div>
+                <div class="section"><h2>📊 Performance</h2><div class="dashboard-grid" id="dashboardStats"></div></div>
+                <div class="section"><h2>🏆 Top & Risiko</h2><div id="performanceAnalysis"></div></div>
             </div>
-            
             <!-- SETTINGS TAB -->
             <div id="settings" class="tab-content">
                 <div class="section">
+                    <h2>🔑 API-Key (Label-Erkennung)</h2>
+                    <p style="font-size: 0.85em; color: #6c757d; margin-bottom: 10px;">Für die KI-Label-Erkennung wird ein Anthropic API-Key benötigt.<br>Holen auf: <a href="https://console.anthropic.com/" target="_blank" style="color: #007bff;">console.anthropic.com</a> — ca. 1 Cent pro Scan.</p>
+                    <label>Anthropic API-Key:</label>
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="flex: 1; font-family: monospace; font-size: 14px;">
+                        <button onclick="saveApiKey()" class="btn-success">💾</button>
+                        <button onclick="toggleKeyVisibility()" class="btn-secondary">👁️</button>
+                    </div>
+                    <div id="apiKeyStatus" style="margin-top: 8px; font-size: 0.85em;"></div>
+                </div>
+                <div class="section">
                     <h2>📁 Backup & Import</h2>
-                    
                     <button onclick="exportBackup()" class="btn-success" style="width: 100%; margin: 5px 0;">💾 Backup erstellen (JSON)</button>
                     <button onclick="document.getElementById('importFile').click()" class="btn-info" style="width: 100%; margin: 5px 0;">📁 Backup laden</button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importBackup()">
-                    
                     <hr style="margin: 15px 0;">
-                    
                     <h3 style="margin: 10px 0;">📊 CSV Import</h3>
-                    <p style="font-size: 0.85em; color: #6c757d; margin-bottom: 10px;">
-                        Importiere deinen Bestand aus einer CSV-Datei.<br>
-                        Spalten: SKU, Name, Size, Brand, Color, Place_of_Purchase, Purchased_at
-                    </p>
+                    <p style="font-size: 0.85em; color: #6c757d; margin-bottom: 10px;">Importiere deinen Bestand aus einer CSV-Datei.<br>Spalten: SKU, Name, Size, Brand, Color, Place_of_Purchase, Purchased_at</p>
                     <button onclick="document.getElementById('csvFile').click()" class="btn-warning" style="width: 100%;">📊 CSV hochladen</button>
                     <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="importCSV()">
-                    
                     <hr style="margin: 15px 0;">
-                    
                     <h3 style="margin: 10px 0;">🗑️ Daten löschen</h3>
                     <button onclick="clearAll()" class="btn-danger" style="width: 100%;">⚠️ Alle Daten löschen</button>
                 </div>
-                
-                <div class="section">
-                    <h2>📊 Statistiken</h2>
-                    <div id="appStats"></div>
+                <div class="section"><h2>📊 Statistiken</h2><div id="appStats"></div></div>
+            </div>
+        </div>
+    </div>
+    <!-- Scan Overlay -->
+    <div class="scan-overlay" id="scanOverlay">
+        <div id="scanLoading" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+            <img id="scanPreviewImg" class="scan-preview-img" src="" alt="" style="display: none;">
+            <div class="scan-spinner"></div>
+            <div class="scan-status" id="scanStatus">🔍 Label wird analysiert...</div>
+        </div>
+        <div id="scanResult" style="display: none;">
+            <div class="scan-result-box">
+                <h3>✅ Label erkannt</h3>
+                <div id="scanResultFields"></div>
+                <div class="scan-actions">
+                    <button onclick="applyScanResult()" class="btn-success">✅ Übernehmen</button>
+                    <button onclick="closeScanOverlay()" class="btn-secondary">❌ Abbrechen</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- API Key Modal -->
+    <div class="api-modal" id="apiModal">
+        <div class="api-modal-box">
+            <h3>🔑 API-Key benötigt</h3>
+            <p>Für die Label-Erkennung brauchst du einen Anthropic API-Key.<br>Erstelle einen auf <a href="https://console.anthropic.com/" target="_blank" style="color: #007bff;">console.anthropic.com</a><br>(ca. 1 Cent pro Scan, $5 Startguthaben empfohlen)</p>
+            <label>API-Key:</label>
+            <input type="password" id="apiKeyModalInput" placeholder="sk-ant-api03-...">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button onclick="saveApiKeyFromModal()" class="btn-success" style="flex: 1;">💾 Speichern & Scannen</button>
+                <button onclick="closeApiModal()" class="btn-secondary" style="flex: 1;">Abbrechen</button>
             </div>
         </div>
     </div>
 
     <script>
         console.log('✅ Sneaker Inventar Pro gestartet');
-        
         let inventory = JSON.parse(localStorage.getItem('inventory') || '[]');
         let sales = JSON.parse(localStorage.getItem('sales') || '[]');
         let selectedSize = null;
         let stream = null;
-        
-        // Alle Größen: Standard (.5) + Adidas EU (⅓/⅔) — numerisch sortiert
+        let lastScanResult = null;
+        let pendingImageBase64 = null;
+
         const sizes = [
-            '35','35.5',
-            '36','36.5','36⅔',
-            '37','37⅓','37.5',
-            '38','38.5','38⅔',
-            '39','39⅓','39.5',
-            '40','40.5','40⅔',
-            '41','41⅓','41.5',
-            '42','42.5','42⅔',
-            '43','43⅓','43.5',
-            '44','44.5','44⅔',
-            '45','45⅓','45.5',
-            '46','46.5','46⅔',
-            '47','47⅓','47.5',
-            '48','48⅔',
-            '49⅓','49.5',
-            '50'
+            '35','35.5','36','36.5','36⅔',
+            '37','37⅓','37.5','38','38.5','38⅔',
+            '39','39⅓','39.5','40','40.5','40⅔',
+            '41','41⅓','41.5','42','42.5','42⅔',
+            '43','43⅓','43.5','44','44.5','44⅔',
+            '45','45⅓','45.5','46','46.5','46⅔',
+            '47','47⅓','47.5','48','48⅔',
+            '49⅓','49.5','50'
         ];
-        
-        // Hilfsfunktion: Erkennt Adidas-Drittelgrößen
-        function isAdidasSize(size) {
-            return size.includes('⅓') || size.includes('⅔');
+
+        function isAdidasSize(s) { return s.includes('⅓') || s.includes('⅔'); }
+
+        // === API KEY ===
+        function getApiKey() { return localStorage.getItem('anthropic_api_key') || ''; }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (!key) { showMessage('❌ Bitte Key eingeben', 'error'); return; }
+            localStorage.setItem('anthropic_api_key', key);
+            showMessage('✅ API-Key gespeichert!', 'success');
+            updateApiKeyStatus();
         }
-        
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            createSizeGrid();
-            document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('saleDate').value = new Date().toISOString().split('T')[0];
-            updateSaleItems();
-            updateAppStats();
-        });
-        
-        // Tabs
-        function showTab(name) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(name).classList.add('active');
-            
-            if (name === 'inventory') loadInventory();
-            if (name === 'sales') { updateSaleItems(); loadSales(); }
-            if (name === 'dashboard') updateDashboard();
-            if (name === 'settings') updateAppStats();
+
+        function saveApiKeyFromModal() {
+            const key = document.getElementById('apiKeyModalInput').value.trim();
+            if (!key) { showMessage('❌ Bitte Key eingeben', 'error'); return; }
+            localStorage.setItem('anthropic_api_key', key);
+            document.getElementById('apiKeyInput').value = key;
+            closeApiModal();
+            updateApiKeyStatus();
+            showMessage('✅ API-Key gespeichert!', 'success');
+            if (pendingImageBase64) { analyzeLabel(pendingImageBase64); pendingImageBase64 = null; }
         }
-        
-        // Scanner
+
+        function toggleKeyVisibility() {
+            const inp = document.getElementById('apiKeyInput');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+        }
+
+        function updateApiKeyStatus() {
+            const key = getApiKey();
+            const el = document.getElementById('apiKeyStatus');
+            if (key) {
+                el.innerHTML = '<span style="color:#28a745;">✅ Key gespeichert (***' + key.slice(-6) + ')</span>';
+                document.getElementById('apiKeyInput').value = key;
+            } else {
+                el.innerHTML = '<span style="color:#dc3545;">❌ Kein Key hinterlegt</span>';
+            }
+        }
+
+        function showApiModal() { document.getElementById('apiModal').classList.add('active'); }
+        function closeApiModal() { document.getElementById('apiModal').classList.remove('active'); }
+
+        // === LABEL SCANNING ===
+        async function analyzeLabel(base64Image) {
+            const apiKey = getApiKey();
+            if (!apiKey) { pendingImageBase64 = base64Image; showApiModal(); return; }
+
+            const overlay = document.getElementById('scanOverlay');
+            overlay.classList.add('active');
+            document.getElementById('scanLoading').style.display = 'flex';
+            document.getElementById('scanResult').style.display = 'none';
+            document.getElementById('scanStatus').textContent = '🔍 Label wird analysiert...';
+
+            const previewImg = document.getElementById('scanPreviewImg');
+            previewImg.src = 'data:image/jpeg;base64,' + base64Image;
+            previewImg.style.display = 'block';
+
+            try {
+                document.getElementById('scanStatus').textContent = '🤖 KI analysiert das Label...';
+
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01',
+                        'anthropic-dangerous-direct-browser-access': 'true'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 1024,
+                        messages: [{
+                            role: 'user',
+                            content: [
+                                { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64Image } },
+                                { type: 'text', text: 'Analysiere dieses Sneaker-/Schuhlabel. Extrahiere folgende Informationen und antworte NUR mit einem JSON-Objekt, kein anderer Text:\n\n{\n  "sku": "Die SKU/Artikelnummer (z.B. DD7117-100, FZ5000, M2002RDA)",\n  "name": "Der vollständige Produktname/Modellname",\n  "brand": "Die Marke (Nike, Adidas, Jordan, Yeezy, New Balance, ASICS, Puma, Vans, Converse)",\n  "color": "Die Farbbeschreibung vom Label (z.B. WHITE/BLACK-VARSITY RED)",\n  "size_eu": "Die EU-Größe als String (z.B. 42, 42.5, 42⅔, 40⅔). Bei Adidas die exakte EU-Größe mit ⅓ oder ⅔ falls vorhanden",\n  "size_us": "Die US-Größe falls sichtbar",\n  "size_uk": "Die UK-Größe falls sichtbar",\n  "confidence": "high/medium/low"\n}\n\nWichtig:\n- Bei Adidas-Labels: Die EU-Größe verwendet oft Brüche wie 42⅔, 43⅓ — gib diese exakt an\n- Die SKU ist die prominente Artikelnummer (nicht der Barcode)\n- Falls ein Feld nicht erkennbar ist, setze null\n- Antworte NUR mit dem JSON, kein Markdown, keine Erklärung' }
+                            ]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error('API Fehler ' + response.status + ': ' + (errData?.error?.message || response.statusText));
+                }
+
+                const data = await response.json();
+                const text = data.content.map(c => c.text || '').join('');
+                const cleaned = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+                const result = JSON.parse(cleaned);
+
+                lastScanResult = result;
+                showScanResult(result);
+
+            } catch (err) {
+                console.error('Scan Error:', err);
+                let errorMsg = err.message;
+                if (errorMsg.includes('401') || errorMsg.includes('authentication')) {
+                    errorMsg = 'Ungültiger API-Key. Bitte prüfe deinen Key in den Settings.';
+                    localStorage.removeItem('anthropic_api_key');
+                    updateApiKeyStatus();
+                } else if (errorMsg.includes('429')) {
+                    errorMsg = 'Zu viele Anfragen. Bitte warte einen Moment.';
+                } else if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
+                    errorMsg = 'Netzwerkfehler. Prüfe deine Internetverbindung.';
+                }
+                closeScanOverlay();
+                showMessage('❌ Scan fehlgeschlagen: ' + errorMsg, 'error');
+            }
+        }
+
+        function showScanResult(result) {
+            document.getElementById('scanLoading').style.display = 'none';
+            document.getElementById('scanResult').style.display = 'flex';
+            const fields = document.getElementById('scanResultFields');
+            const entries = [
+                ['SKU', result.sku], ['Modell', result.name], ['Marke', result.brand],
+                ['Farbe', result.color], ['EU Größe', result.size_eu],
+                ['US Größe', result.size_us], ['UK Größe', result.size_uk],
+                ['Konfidenz', result.confidence === 'high' ? '🟢 Hoch' : result.confidence === 'medium' ? '🟡 Mittel' : '🔴 Niedrig']
+            ];
+            fields.innerHTML = entries.filter(([_, v]) => v).map(([l, v]) =>
+                '<div class="scan-field"><span class="scan-field-label">' + l + '</span><span class="scan-field-value">' + v + '</span></div>'
+            ).join('');
+        }
+
+        function applyScanResult() {
+            if (!lastScanResult) return;
+            const r = lastScanResult;
+            if (r.sku) document.getElementById('sku').value = r.sku;
+            if (r.name) document.getElementById('productName').value = r.name;
+            if (r.brand) {
+                const sel = document.getElementById('brand');
+                const bl = r.brand.toLowerCase();
+                for (let i = 0; i < sel.options.length; i++) {
+                    if (sel.options[i].value.toLowerCase() === bl) { sel.selectedIndex = i; break; }
+                }
+            }
+            if (r.color) document.getElementById('color').value = r.color;
+            if (r.size_eu) selectSizeInGrid(normalizeSize(r.size_eu));
+            closeScanOverlay();
+            showMessage('✅ Label-Daten übernommen! Bitte Preis und Lagerort ergänzen.', 'success');
+        }
+
+        function normalizeSize(s) {
+            if (!s) return null;
+            s = s.toString().trim().replace(/1\/3/g, '⅓').replace(/2\/3/g, '⅔').replace(/\s+/g, '');
+            return s;
+        }
+
+        function selectSizeInGrid(target) {
+            if (!target) return;
+            let found = false;
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.textContent === target) {
+                    btn.classList.add('selected'); selectedSize = target; found = true;
+                    btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+            if (!found) {
+                const numTarget = parseFloat(target.replace('⅓', '.333').replace('⅔', '.667'));
+                if (!isNaN(numTarget)) {
+                    let bestMatch = null, bestDiff = Infinity;
+                    document.querySelectorAll('.size-btn').forEach(btn => {
+                        const nv = parseFloat(btn.textContent.replace('⅓', '.333').replace('⅔', '.667'));
+                        const diff = Math.abs(nv - numTarget);
+                        if (diff < bestDiff) { bestDiff = diff; bestMatch = btn; }
+                    });
+                    if (bestMatch && bestDiff < 0.5) {
+                        bestMatch.classList.add('selected'); selectedSize = bestMatch.textContent;
+                        bestMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }
+        }
+
+        function closeScanOverlay() { document.getElementById('scanOverlay').classList.remove('active'); lastScanResult = null; }
+
+        // === IMAGE PROCESSING ===
+        function imageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        const maxDim = 1536;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+                            else { w = Math.round(w * maxDim / h); h = maxDim; }
+                        }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
+                    };
+                    img.onerror = reject;
+                    img.src = reader.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // === SCANNER ===
         async function startScanner() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' }
-                });
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } } });
                 document.getElementById('video').srcObject = stream;
                 document.getElementById('scannerPreview').style.display = 'block';
-                showMessage('📸 Kamera gestartet', 'success');
-            } catch (e) {
-                showMessage('❌ Kamera-Zugriff verweigert. Nutze Foto-Upload!', 'error');
-            }
+                showMessage('📸 Kamera gestartet — Label fokussieren & aufnehmen', 'success');
+            } catch (e) { showMessage('❌ Kamera-Zugriff verweigert. Nutze Foto-Upload!', 'error'); }
         }
-        
+
         function stopScanner() {
-            if (stream) {
-                stream.getTracks().forEach(t => t.stop());
-                stream = null;
-            }
+            if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
             document.getElementById('scannerPreview').style.display = 'none';
         }
-        
-        function captureFrame() {
+
+        async function captureFrame() {
             const video = document.getElementById('video');
             const canvas = document.getElementById('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0);
-            
-            const sku = prompt('📸 Foto aufgenommen! Bitte SKU vom Label eingeben:');
-            if (sku) {
-                document.getElementById('sku').value = sku.toUpperCase();
-                showMessage('✅ SKU eingetragen!', 'success');
-            }
             stopScanner();
+            const base64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+            await analyzeLabel(base64);
         }
-        
-        function handlePhoto() {
+
+        async function handlePhoto() {
             const file = document.getElementById('photoInput').files[0];
             if (!file) return;
-            
-            const sku = prompt('📸 Foto hochgeladen! Bitte SKU vom Label eingeben:');
-            if (sku) {
-                document.getElementById('sku').value = sku.toUpperCase();
-                showMessage('✅ SKU eingetragen!', 'success');
-            }
+            try {
+                showMessage('📷 Foto wird verarbeitet...', 'info');
+                const base64 = await imageToBase64(file);
+                await analyzeLabel(base64);
+            } catch (e) { showMessage('❌ Fehler beim Verarbeiten des Fotos', 'error'); console.error(e); }
+            document.getElementById('photoInput').value = '';
         }
-        
-        // Größen-Grid mit visueller Unterscheidung
+
+        // === SIZE GRID ===
         function createSizeGrid() {
             const grid = document.getElementById('sizeGrid');
             grid.innerHTML = '';
@@ -800,117 +553,96 @@
                 btn.textContent = size;
                 btn.onclick = () => {
                     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    selectedSize = size;
+                    btn.classList.add('selected'); selectedSize = size;
                 };
                 grid.appendChild(btn);
             });
         }
-        
-        // Gewinn berechnen
+
+        // === INIT ===
+        document.addEventListener('DOMContentLoaded', () => {
+            createSizeGrid();
+            document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('saleDate').value = new Date().toISOString().split('T')[0];
+            updateSaleItems(); updateAppStats(); updateApiKeyStatus();
+        });
+
+        // === TABS ===
+        function showTab(name) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(name).classList.add('active');
+            if (name === 'inventory') loadInventory();
+            if (name === 'sales') { updateSaleItems(); loadSales(); }
+            if (name === 'dashboard') updateDashboard();
+            if (name === 'settings') { updateAppStats(); updateApiKeyStatus(); }
+        }
+
+        // === PROFIT ===
         function calcProfit() {
             const purchase = parseFloat(document.getElementById('purchasePrice').value) || 0;
             const bid = parseFloat(document.getElementById('highestBid').value) || 0;
             const vat = document.getElementById('includeVat').checked;
-            
             if (purchase > 0 && bid > 0) {
                 const net = vat ? purchase / 1.19 : purchase;
                 const profit = bid - net;
-                const percent = ((profit / net) * 100).toFixed(1);
-                const color = profit > 0 ? 'positive' : 'negative';
-                
-                document.getElementById('profitValue').innerHTML = `<span class="${color}">€${profit.toFixed(2)} (${percent}%)</span>`;
+                const pct = ((profit / net) * 100).toFixed(1);
+                document.getElementById('profitValue').innerHTML = '<span class="' + (profit > 0 ? 'positive' : 'negative') + '">€' + profit.toFixed(2) + ' (' + pct + '%)</span>';
                 document.getElementById('profitBox').style.display = 'block';
-            } else {
-                document.getElementById('profitBox').style.display = 'none';
-            }
+            } else { document.getElementById('profitBox').style.display = 'none'; }
         }
-        
-        // Speichern
+
+        // === SAVE ===
         function saveItem() {
             const sku = document.getElementById('sku').value.trim();
             const name = document.getElementById('productName').value.trim();
             const price = document.getElementById('purchasePrice').value;
-            
-            if (!sku || !name || !selectedSize || !price) {
-                showMessage('❌ Bitte SKU, Name, Größe und Preis ausfüllen!', 'error');
-                return;
-            }
-            
+            if (!sku || !name || !selectedSize || !price) { showMessage('❌ Bitte SKU, Name, Größe und Preis ausfüllen!', 'error'); return; }
             const item = {
-                id: Date.now(),
-                sku: sku.toUpperCase(),
-                name,
-                brand: document.getElementById('brand').value,
-                color: document.getElementById('color').value,
-                retailPrice: parseFloat(document.getElementById('retailPrice').value) || 0,
-                releaseDate: document.getElementById('releaseDate').value,
-                size: selectedSize,
-                purchasePrice: parseFloat(price),
-                includeVat: document.getElementById('includeVat').checked,
-                location: document.getElementById('location').value,
-                date: document.getElementById('purchaseDate').value,
+                id: Date.now(), sku: sku.toUpperCase(), name, brand: document.getElementById('brand').value,
+                color: document.getElementById('color').value, retailPrice: parseFloat(document.getElementById('retailPrice').value) || 0,
+                releaseDate: document.getElementById('releaseDate').value, size: selectedSize,
+                purchasePrice: parseFloat(price), includeVat: document.getElementById('includeVat').checked,
+                location: document.getElementById('location').value, date: document.getElementById('purchaseDate').value,
                 notes: document.getElementById('notes').value,
-                stockx: {
-                    lastSale: parseFloat(document.getElementById('lastSale').value) || 0,
-                    highestBid: parseFloat(document.getElementById('highestBid').value) || 0,
-                    lowestAsk: parseFloat(document.getElementById('lowestAsk').value) || 0
-                },
-                status: 'available',
-                added: new Date().toISOString()
+                stockx: { lastSale: parseFloat(document.getElementById('lastSale').value) || 0, highestBid: parseFloat(document.getElementById('highestBid').value) || 0, lowestAsk: parseFloat(document.getElementById('lowestAsk').value) || 0 },
+                status: 'available', added: new Date().toISOString()
             };
-            
             inventory.push(item);
             localStorage.setItem('inventory', JSON.stringify(inventory));
-            
             showMessage('✅ Artikel gespeichert!', 'success');
-            resetForm();
-            updateSaleItems();
+            resetForm(); updateSaleItems();
         }
-        
+
         function resetForm() {
-            ['sku','productName','color','retailPrice','releaseDate','purchasePrice','location','notes','lastSale','highestBid','lowestAsk'].forEach(id => {
-                document.getElementById(id).value = '';
-            });
+            ['sku','productName','color','retailPrice','releaseDate','purchasePrice','location','notes','lastSale','highestBid','lowestAsk'].forEach(id => { document.getElementById(id).value = ''; });
             document.getElementById('includeVat').checked = false;
             document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
             selectedSize = null;
             document.getElementById('profitBox').style.display = 'none';
+            document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
         }
-        
-        // Inventar
-        function loadInventory() {
-            updateBrandFilter();
-            searchInventory();
-        }
-        
+
+        // === INVENTORY ===
+        function loadInventory() { updateBrandFilter(); searchInventory(); }
+
         function updateBrandFilter() {
             const brands = [...new Set(inventory.map(i => i.brand))].sort();
-            const filter = document.getElementById('brandFilter');
-            filter.innerHTML = '<option value="all">Alle</option>';
-            brands.forEach(b => {
-                const opt = document.createElement('option');
-                opt.value = b;
-                opt.textContent = b;
-                filter.appendChild(opt);
-            });
+            const f = document.getElementById('brandFilter');
+            f.innerHTML = '<option value="all">Alle</option>';
+            brands.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; f.appendChild(o); });
         }
-        
+
         function searchInventory() {
             const search = document.getElementById('searchInput').value.toLowerCase();
             const status = document.getElementById('statusFilter').value;
             const brand = document.getElementById('brandFilter').value;
             const sort = document.getElementById('sortSelect').value;
-            
             let filtered = inventory.filter(item => {
-                const text = `${item.name} ${item.sku} ${item.size} ${item.location}`.toLowerCase();
-                const matchSearch = !search || text.includes(search);
-                const matchStatus = status === 'all' || item.status === status;
-                const matchBrand = brand === 'all' || item.brand === brand;
-                return matchSearch && matchStatus && matchBrand;
+                const text = (item.name + ' ' + item.sku + ' ' + item.size + ' ' + item.location).toLowerCase();
+                return (!search || text.includes(search)) && (status === 'all' || item.status === status) && (brand === 'all' || item.brand === brand);
             });
-            
-            // Sortierung
             filtered.sort((a, b) => {
                 if (sort === 'date-desc') return new Date(b.date) - new Date(a.date);
                 if (sort === 'date-asc') return new Date(a.date) - new Date(b.date);
@@ -919,432 +651,204 @@
                 if (sort === 'name') return a.name.localeCompare(b.name);
                 return 0;
             });
-            
-            const container = document.getElementById('inventoryList');
-            container.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">Keine Artikel gefunden</p>';
-                return;
-            }
-            
-            filtered.forEach((item, idx) => {
-                const realIdx = inventory.indexOf(item);
+            const c = document.getElementById('inventoryList');
+            c.innerHTML = '';
+            if (!filtered.length) { c.innerHTML = '<p style="text-align:center;color:#6c757d;padding:20px;">Keine Artikel gefunden</p>'; return; }
+            filtered.forEach(item => {
+                const ri = inventory.indexOf(item);
                 const div = document.createElement('div');
-                div.className = `item ${item.status === 'sold' ? 'sold' : ''}`;
-                
-                const netPrice = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
-                const profit = item.stockx?.highestBid ? (item.stockx.highestBid - netPrice).toFixed(2) : null;
-                
-                div.innerHTML = `
-                    <h4>${item.name} ${item.status === 'sold' ? '[VERKAUFT]' : ''}</h4>
-                    <div class="item-details">
-                        <div class="item-detail"><strong>SKU:</strong> ${item.sku}</div>
-                        <div class="item-detail"><strong>Größe:</strong> ${item.size}</div>
-                        <div class="item-detail"><strong>Marke:</strong> ${item.brand}</div>
-                        ${item.color ? `<div class="item-detail"><strong>Farbe:</strong> ${item.color}</div>` : ''}
-                        <div class="item-detail"><strong>Einkauf:</strong> €${item.purchasePrice}${item.includeVat ? ' (inkl.)' : ''}</div>
-                        ${item.location ? `<div class="item-detail"><strong>Lagerort:</strong> ${item.location}</div>` : ''}
-                        <div class="item-detail"><strong>Datum:</strong> ${item.date}</div>
-                        ${profit ? `<div class="item-detail"><strong>Potenzial:</strong> <span class="${parseFloat(profit) > 0 ? 'positive' : 'negative'}">€${profit}</span></div>` : ''}
-                    </div>
-                    ${item.stockx && (item.stockx.lastSale || item.stockx.highestBid) ? `
-                        <div class="stockx-box">
-                            <h5>📈 StockX</h5>
-                            <div class="stockx-grid">
-                                ${item.stockx.lastSale ? `<div class="stockx-item"><small>Letzter Verkauf</small><br><strong>€${item.stockx.lastSale}</strong></div>` : ''}
-                                ${item.stockx.highestBid ? `<div class="stockx-item"><small>Höchstes Gebot</small><br><strong>€${item.stockx.highestBid}</strong></div>` : ''}
-                                ${item.stockx.lowestAsk ? `<div class="stockx-item"><small>Niedrigste Forderung</small><br><strong>€${item.stockx.lowestAsk}</strong></div>` : ''}
-                            </div>
-                        </div>
-                    ` : ''}
-                    ${item.notes ? `<p style="margin-top: 8px; font-size: 0.85em; font-style: italic; color: #6c757d;">${item.notes}</p>` : ''}
-                    <div style="margin-top: 10px;">
-                        <button onclick="deleteItem(${realIdx})" class="btn-danger">🗑️ Löschen</button>
-                    </div>
-                `;
-                container.appendChild(div);
+                div.className = 'item ' + (item.status === 'sold' ? 'sold' : '');
+                const net = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
+                const profit = item.stockx?.highestBid ? (item.stockx.highestBid - net).toFixed(2) : null;
+                div.innerHTML = '<h4>' + item.name + (item.status === 'sold' ? ' [VERKAUFT]' : '') + '</h4>' +
+                    '<div class="item-details">' +
+                    '<div class="item-detail"><strong>SKU:</strong> ' + item.sku + '</div>' +
+                    '<div class="item-detail"><strong>Größe:</strong> ' + item.size + '</div>' +
+                    '<div class="item-detail"><strong>Marke:</strong> ' + item.brand + '</div>' +
+                    (item.color ? '<div class="item-detail"><strong>Farbe:</strong> ' + item.color + '</div>' : '') +
+                    '<div class="item-detail"><strong>Einkauf:</strong> €' + item.purchasePrice + (item.includeVat ? ' (inkl.)' : '') + '</div>' +
+                    (item.location ? '<div class="item-detail"><strong>Lagerort:</strong> ' + item.location + '</div>' : '') +
+                    '<div class="item-detail"><strong>Datum:</strong> ' + item.date + '</div>' +
+                    (profit ? '<div class="item-detail"><strong>Potenzial:</strong> <span class="' + (parseFloat(profit) > 0 ? 'positive' : 'negative') + '">€' + profit + '</span></div>' : '') +
+                    '</div>' +
+                    (item.stockx && (item.stockx.lastSale || item.stockx.highestBid) ? '<div class="stockx-box"><h5>📈 StockX</h5><div class="stockx-grid">' +
+                    (item.stockx.lastSale ? '<div class="stockx-item"><small>Letzter Verkauf</small><br><strong>€' + item.stockx.lastSale + '</strong></div>' : '') +
+                    (item.stockx.highestBid ? '<div class="stockx-item"><small>Höchstes Gebot</small><br><strong>€' + item.stockx.highestBid + '</strong></div>' : '') +
+                    (item.stockx.lowestAsk ? '<div class="stockx-item"><small>Niedrigste Forderung</small><br><strong>€' + item.stockx.lowestAsk + '</strong></div>' : '') +
+                    '</div></div>' : '') +
+                    (item.notes ? '<p style="margin-top:8px;font-size:0.85em;font-style:italic;color:#6c757d;">' + item.notes + '</p>' : '') +
+                    '<div style="margin-top:10px;"><button onclick="deleteItem(' + ri + ')" class="btn-danger">🗑️ Löschen</button></div>';
+                c.appendChild(div);
             });
-            
-            showMessage(`${filtered.length} von ${inventory.length} Artikeln`, 'info');
+            showMessage(filtered.length + ' von ' + inventory.length + ' Artikeln', 'info');
         }
-        
+
         function deleteItem(idx) {
-            if (confirm('Wirklich löschen?')) {
-                inventory.splice(idx, 1);
-                localStorage.setItem('inventory', JSON.stringify(inventory));
-                searchInventory();
-                updateSaleItems();
-            }
+            if (confirm('Wirklich löschen?')) { inventory.splice(idx, 1); localStorage.setItem('inventory', JSON.stringify(inventory)); searchInventory(); updateSaleItems(); }
         }
-        
-        // Verkäufe
+
+        // === SALES ===
         function updateSaleItems() {
-            const select = document.getElementById('saleItem');
-            select.innerHTML = '<option value="">-- Wählen --</option>';
-            inventory.filter(i => i.status === 'available').forEach((item, idx) => {
-                const realIdx = inventory.indexOf(item);
-                const opt = document.createElement('option');
-                opt.value = realIdx;
-                opt.textContent = `${item.name} - ${item.sku} - ${item.size}`;
-                select.appendChild(opt);
+            const sel = document.getElementById('saleItem');
+            sel.innerHTML = '<option value="">-- Wählen --</option>';
+            inventory.filter(i => i.status === 'available').forEach(item => {
+                const ri = inventory.indexOf(item);
+                const o = document.createElement('option'); o.value = ri;
+                o.textContent = item.name + ' - ' + item.sku + ' - ' + item.size;
+                sel.appendChild(o);
             });
         }
-        
+
         function recordSale() {
             const idx = document.getElementById('saleItem').value;
             const price = parseFloat(document.getElementById('salePrice').value);
             const date = document.getElementById('saleDate').value;
             const fees = parseFloat(document.getElementById('saleFees').value) || 0;
-            
-            if (!idx || !price || !date) {
-                showMessage('❌ Bitte Artikel, Preis und Datum ausfüllen', 'error');
-                return;
-            }
-            
+            if (!idx || !price || !date) { showMessage('❌ Bitte Artikel, Preis und Datum ausfüllen', 'error'); return; }
             const item = inventory[idx];
-            const netPurchase = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
-            const profit = price - fees - netPurchase;
-            
-            const sale = {
-                id: Date.now(),
-                itemId: item.id,
-                name: item.name,
-                sku: item.sku,
-                size: item.size,
-                purchasePrice: item.purchasePrice,
-                includeVat: item.includeVat,
-                salePrice: price,
-                fees,
-                profit,
-                platform: document.getElementById('salePlatform').value,
-                date,
-                recorded: new Date().toISOString()
-            };
-            
-            sales.push(sale);
+            const netP = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
+            const profit = price - fees - netP;
+            sales.push({ id: Date.now(), itemId: item.id, name: item.name, sku: item.sku, size: item.size, purchasePrice: item.purchasePrice, includeVat: item.includeVat, salePrice: price, fees, profit, platform: document.getElementById('salePlatform').value, date, recorded: new Date().toISOString() });
             localStorage.setItem('sales', JSON.stringify(sales));
-            
-            inventory[idx].status = 'sold';
-            inventory[idx].saleDate = date;
-            inventory[idx].salePrice = price;
+            inventory[idx].status = 'sold'; inventory[idx].saleDate = date; inventory[idx].salePrice = price;
             localStorage.setItem('inventory', JSON.stringify(inventory));
-            
-            showMessage(`✅ Verkauf erfasst! Gewinn: €${profit.toFixed(2)}`, 'success');
-            
-            document.getElementById('saleItem').value = '';
-            document.getElementById('salePrice').value = '';
-            document.getElementById('saleFees').value = '';
-            
+            showMessage('✅ Verkauf erfasst! Gewinn: €' + profit.toFixed(2), 'success');
+            document.getElementById('saleItem').value = ''; document.getElementById('salePrice').value = ''; document.getElementById('saleFees').value = '';
             updateSaleItems();
         }
-        
+
         function loadSales() {
-            const container = document.getElementById('salesList');
-            container.innerHTML = '';
-            
-            if (sales.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">Keine Verkäufe</p>';
-                return;
-            }
-            
-            [...sales].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach((sale, idx) => {
-                const realIdx = sales.indexOf(sale);
-                const div = document.createElement('div');
-                div.className = 'item';
-                const color = sale.profit > 0 ? 'positive' : 'negative';
-                
-                div.innerHTML = `
-                    <h4>${sale.name}</h4>
-                    <div class="item-details">
-                        <div class="item-detail"><strong>SKU:</strong> ${sale.sku}</div>
-                        <div class="item-detail"><strong>Größe:</strong> ${sale.size}</div>
-                        <div class="item-detail"><strong>Einkauf:</strong> €${sale.purchasePrice}</div>
-                        <div class="item-detail"><strong>Verkauf:</strong> €${sale.salePrice}</div>
-                        <div class="item-detail"><strong>Gebühren:</strong> €${sale.fees}</div>
-                        <div class="item-detail"><strong>Gewinn:</strong> <span class="${color}">€${sale.profit.toFixed(2)}</span></div>
-                        <div class="item-detail"><strong>Plattform:</strong> ${sale.platform}</div>
-                        <div class="item-detail"><strong>Datum:</strong> ${sale.date}</div>
-                    </div>
-                    <button onclick="deleteSale(${realIdx})" class="btn-danger">🗑️ Löschen</button>
-                `;
-                container.appendChild(div);
+            const c = document.getElementById('salesList'); c.innerHTML = '';
+            if (!sales.length) { c.innerHTML = '<p style="text-align:center;color:#6c757d;padding:20px;">Keine Verkäufe</p>'; return; }
+            [...sales].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(sale => {
+                const ri = sales.indexOf(sale);
+                const div = document.createElement('div'); div.className = 'item';
+                const col = sale.profit > 0 ? 'positive' : 'negative';
+                div.innerHTML = '<h4>' + sale.name + '</h4><div class="item-details">' +
+                    '<div class="item-detail"><strong>SKU:</strong> ' + sale.sku + '</div>' +
+                    '<div class="item-detail"><strong>Größe:</strong> ' + sale.size + '</div>' +
+                    '<div class="item-detail"><strong>Einkauf:</strong> €' + sale.purchasePrice + '</div>' +
+                    '<div class="item-detail"><strong>Verkauf:</strong> €' + sale.salePrice + '</div>' +
+                    '<div class="item-detail"><strong>Gebühren:</strong> €' + sale.fees + '</div>' +
+                    '<div class="item-detail"><strong>Gewinn:</strong> <span class="' + col + '">€' + sale.profit.toFixed(2) + '</span></div>' +
+                    '<div class="item-detail"><strong>Plattform:</strong> ' + sale.platform + '</div>' +
+                    '<div class="item-detail"><strong>Datum:</strong> ' + sale.date + '</div></div>' +
+                    '<button onclick="deleteSale(' + ri + ')" class="btn-danger">🗑️ Löschen</button>';
+                c.appendChild(div);
             });
         }
-        
+
         function deleteSale(idx) {
             if (confirm('Verkauf löschen?')) {
                 const sale = sales[idx];
                 const item = inventory.find(i => i.id === sale.itemId);
-                if (item) {
-                    item.status = 'available';
-                    delete item.saleDate;
-                    delete item.salePrice;
-                    localStorage.setItem('inventory', JSON.stringify(inventory));
-                }
-                sales.splice(idx, 1);
-                localStorage.setItem('sales', JSON.stringify(sales));
-                loadSales();
-                updateSaleItems();
+                if (item) { item.status = 'available'; delete item.saleDate; delete item.salePrice; localStorage.setItem('inventory', JSON.stringify(inventory)); }
+                sales.splice(idx, 1); localStorage.setItem('sales', JSON.stringify(sales));
+                loadSales(); updateSaleItems();
             }
         }
-        
-        // Dashboard
+
+        // === DASHBOARD ===
         function updateDashboard() {
-            const total = inventory.length;
-            const available = inventory.filter(i => i.status === 'available').length;
-            const sold = inventory.filter(i => i.status === 'sold').length;
-            
-            const investment = inventory.reduce((sum, i) => sum + (i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice), 0);
-            const marketValue = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((sum, i) => sum + i.stockx.highestBid, 0);
-            const unrealized = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((sum, i) => {
-                const net = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice;
-                return sum + (i.stockx.highestBid - net);
-            }, 0);
-            
-            const totalSales = sales.reduce((sum, s) => sum + s.salePrice, 0);
-            const totalProfit = sales.reduce((sum, s) => sum + s.profit, 0);
-            
-            document.getElementById('dashboardStats').innerHTML = `
-                <div class="dashboard-card">
-                    <h3>📦 Inventar</h3>
-                    <div class="dashboard-value neutral">${total}</div>
-                    <p style="font-size: 0.8em;">${available} verfügbar</p>
-                </div>
-                <div class="dashboard-card">
-                    <h3>💰 Investition</h3>
-                    <div class="dashboard-value neutral">€${investment.toFixed(0)}</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>💎 Marktwert</h3>
-                    <div class="dashboard-value ${marketValue > investment ? 'positive' : 'neutral'}">€${marketValue.toFixed(0)}</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>📈 Unrealisiert</h3>
-                    <div class="dashboard-value ${unrealized > 0 ? 'positive' : 'negative'}">€${unrealized.toFixed(0)}</div>
-                </div>
-                <div class="dashboard-card">
-                    <h3>💵 Verkäufe</h3>
-                    <div class="dashboard-value neutral">€${totalSales.toFixed(0)}</div>
-                    <p style="font-size: 0.8em;">${sold} Stück</p>
-                </div>
-                <div class="dashboard-card">
-                    <h3>🎯 Gewinn</h3>
-                    <div class="dashboard-value ${totalProfit > 0 ? 'positive' : 'negative'}">€${totalProfit.toFixed(0)}</div>
-                </div>
-            `;
-            
-            // Top/Risk
-            const topSales = [...sales].sort((a, b) => b.profit - a.profit).slice(0, 3);
-            const topPotential = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).map(i => {
-                const net = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice;
-                return { ...i, potential: i.stockx.highestBid - net };
-            }).sort((a, b) => b.potential - a.potential).slice(0, 3);
-            
-            document.getElementById('performanceAnalysis').innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div>
-                        <h4 style="margin-bottom: 10px;">🏆 Top Verkäufe</h4>
-                        ${topSales.length ? topSales.map(s => `
-                            <div class="item-detail" style="margin: 5px 0;">
-                                <strong>${s.name}</strong><br>
-                                <span class="positive">+€${s.profit.toFixed(2)}</span>
-                            </div>
-                        `).join('') : '<p style="color: #6c757d; font-size: 0.85em;">Keine Verkäufe</p>'}
-                    </div>
-                    <div>
-                        <h4 style="margin-bottom: 10px;">💎 Top Potenzial</h4>
-                        ${topPotential.length ? topPotential.map(i => `
-                            <div class="item-detail" style="margin: 5px 0;">
-                                <strong>${i.name}</strong><br>
-                                <span class="${i.potential > 0 ? 'positive' : 'negative'}">€${i.potential.toFixed(2)}</span>
-                            </div>
-                        `).join('') : '<p style="color: #6c757d; font-size: 0.85em;">Keine Daten</p>'}
-                    </div>
-                </div>
-            `;
+            const total = inventory.length, avail = inventory.filter(i => i.status === 'available').length, sold = inventory.filter(i => i.status === 'sold').length;
+            const invest = inventory.reduce((s, i) => s + (i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice), 0);
+            const mktVal = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((s, i) => s + i.stockx.highestBid, 0);
+            const unreal = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((s, i) => { const n = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice; return s + (i.stockx.highestBid - n); }, 0);
+            const totSales = sales.reduce((s, x) => s + x.salePrice, 0), totProfit = sales.reduce((s, x) => s + x.profit, 0);
+            document.getElementById('dashboardStats').innerHTML =
+                '<div class="dashboard-card"><h3>📦 Inventar</h3><div class="dashboard-value neutral">' + total + '</div><p style="font-size:0.8em;">' + avail + ' verfügbar</p></div>' +
+                '<div class="dashboard-card"><h3>💰 Investition</h3><div class="dashboard-value neutral">€' + invest.toFixed(0) + '</div></div>' +
+                '<div class="dashboard-card"><h3>💎 Marktwert</h3><div class="dashboard-value ' + (mktVal > invest ? 'positive' : 'neutral') + '">€' + mktVal.toFixed(0) + '</div></div>' +
+                '<div class="dashboard-card"><h3>📈 Unrealisiert</h3><div class="dashboard-value ' + (unreal > 0 ? 'positive' : 'negative') + '">€' + unreal.toFixed(0) + '</div></div>' +
+                '<div class="dashboard-card"><h3>💵 Verkäufe</h3><div class="dashboard-value neutral">€' + totSales.toFixed(0) + '</div><p style="font-size:0.8em;">' + sold + ' Stück</p></div>' +
+                '<div class="dashboard-card"><h3>🎯 Gewinn</h3><div class="dashboard-value ' + (totProfit > 0 ? 'positive' : 'negative') + '">€' + totProfit.toFixed(0) + '</div></div>';
+            const topS = [...sales].sort((a, b) => b.profit - a.profit).slice(0, 3);
+            const topP = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).map(i => { const n = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice; return { ...i, potential: i.stockx.highestBid - n }; }).sort((a, b) => b.potential - a.potential).slice(0, 3);
+            document.getElementById('performanceAnalysis').innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;"><div><h4 style="margin-bottom:10px;">🏆 Top Verkäufe</h4>' +
+                (topS.length ? topS.map(s => '<div class="item-detail" style="margin:5px 0;"><strong>' + s.name + '</strong><br><span class="positive">+€' + s.profit.toFixed(2) + '</span></div>').join('') : '<p style="color:#6c757d;font-size:0.85em;">Keine Verkäufe</p>') +
+                '</div><div><h4 style="margin-bottom:10px;">💎 Top Potenzial</h4>' +
+                (topP.length ? topP.map(i => '<div class="item-detail" style="margin:5px 0;"><strong>' + i.name + '</strong><br><span class="' + (i.potential > 0 ? 'positive' : 'negative') + '">€' + i.potential.toFixed(2) + '</span></div>').join('') : '<p style="color:#6c757d;font-size:0.85em;">Keine Daten</p>') +
+                '</div></div>';
         }
-        
-        // CSV Export
+
+        // === EXPORT / IMPORT ===
         function exportInventoryCSV() {
-            if (!inventory.length) {
-                showMessage('❌ Kein Inventar', 'error');
-                return;
-            }
-            
-            const csv = [
-                'SKU,Name,Marke,Farbe,Größe,Status,Einkaufspreis,MwSt,Retail,Lagerort,Datum',
-                ...inventory.map(i => [
-                    i.sku,
-                    `"${i.name}"`,
-                    i.brand,
-                    i.color || '',
-                    i.size,
-                    i.status,
-                    i.purchasePrice,
-                    i.includeVat ? 'Ja' : 'Nein',
-                    i.retailPrice || '',
-                    `"${i.location || ''}"`,
-                    i.date
-                ].join(','))
-            ].join('\n');
-            
-            download(csv, `inventar-${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+            if (!inventory.length) { showMessage('❌ Kein Inventar', 'error'); return; }
+            const csv = ['SKU,Name,Marke,Farbe,Größe,Status,Einkaufspreis,MwSt,Retail,Lagerort,Datum', ...inventory.map(i => [i.sku, '"' + i.name + '"', i.brand, i.color || '', i.size, i.status, i.purchasePrice, i.includeVat ? 'Ja' : 'Nein', i.retailPrice || '', '"' + (i.location || '') + '"', i.date].join(','))].join('\n');
+            download(csv, 'inventar-' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv');
             showMessage('✅ CSV exportiert!', 'success');
         }
-        
         function exportSalesCSV() {
-            if (!sales.length) {
-                showMessage('❌ Keine Verkäufe', 'error');
-                return;
-            }
-            
-            const csv = [
-                'SKU,Name,Größe,Einkauf,Verkauf,Gebühren,Gewinn,Plattform,Datum',
-                ...sales.map(s => [
-                    s.sku,
-                    `"${s.name}"`,
-                    s.size,
-                    s.purchasePrice,
-                    s.salePrice,
-                    s.fees,
-                    s.profit.toFixed(2),
-                    s.platform,
-                    s.date
-                ].join(','))
-            ].join('\n');
-            
-            download(csv, `verkäufe-${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+            if (!sales.length) { showMessage('❌ Keine Verkäufe', 'error'); return; }
+            const csv = ['SKU,Name,Größe,Einkauf,Verkauf,Gebühren,Gewinn,Plattform,Datum', ...sales.map(s => [s.sku, '"' + s.name + '"', s.size, s.purchasePrice, s.salePrice, s.fees, s.profit.toFixed(2), s.platform, s.date].join(','))].join('\n');
+            download(csv, 'verkäufe-' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv');
             showMessage('✅ Verkäufe CSV exportiert!', 'success');
         }
-        
-        // CSV Import
         function importCSV() {
-            const file = document.getElementById('csvFile').files[0];
-            if (!file) return;
-            
+            const file = document.getElementById('csvFile').files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const lines = e.target.result.split('\n');
-                    let count = 0;
-                    
+                    const lines = e.target.result.split('\n'); let count = 0;
                     for (let i = 1; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (!line) continue;
-                        
+                        const line = lines[i].trim(); if (!line) continue;
                         const parts = line.split(',').map(p => p.replace(/"/g, '').trim());
                         if (parts.length < 2) continue;
-                        
-                        const item = {
-                            id: Date.now() + i,
-                            sku: (parts[0] || '').toUpperCase(),
-                            name: parts[1] || '',
-                            brand: parts[3] || 'Nike',
-                            color: parts[4] || '',
-                            size: parts[2] || '42',
-                            purchasePrice: 0,
-                            includeVat: false,
-                            location: parts[5] || '',
-                            date: parts[6] || new Date().toISOString().split('T')[0],
-                            status: 'available',
-                            stockx: { lastSale: 0, highestBid: 0, lowestAsk: 0 },
-                            added: new Date().toISOString()
-                        };
-                        
-                        if (item.sku && item.name) {
-                            inventory.push(item);
-                            count++;
-                        }
+                        const item = { id: Date.now() + i, sku: (parts[0] || '').toUpperCase(), name: parts[1] || '', brand: parts[3] || 'Nike', color: parts[4] || '', size: parts[2] || '42', purchasePrice: 0, includeVat: false, location: parts[5] || '', date: parts[6] || new Date().toISOString().split('T')[0], status: 'available', stockx: { lastSale: 0, highestBid: 0, lowestAsk: 0 }, added: new Date().toISOString() };
+                        if (item.sku && item.name) { inventory.push(item); count++; }
                     }
-                    
                     localStorage.setItem('inventory', JSON.stringify(inventory));
-                    showMessage(`✅ ${count} Artikel importiert!`, 'success');
-                    
-                } catch (e) {
-                    showMessage('❌ Import fehlgeschlagen', 'error');
-                    console.error(e);
-                }
+                    showMessage('✅ ' + count + ' Artikel importiert!', 'success');
+                } catch (e) { showMessage('❌ Import fehlgeschlagen', 'error'); }
             };
             reader.readAsText(file);
         }
-        
-        // Backup
+
+        // === BACKUP ===
         function exportBackup() {
-            const data = { inventory, sales, exportDate: new Date().toISOString() };
-            download(JSON.stringify(data, null, 2), `backup-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+            download(JSON.stringify({ inventory, sales, exportDate: new Date().toISOString() }, null, 2), 'backup-' + new Date().toISOString().split('T')[0] + '.json', 'application/json');
             showMessage('✅ Backup erstellt!', 'success');
         }
-        
         function importBackup() {
-            const file = document.getElementById('importFile').files[0];
-            if (!file) return;
-            
+            const file = document.getElementById('importFile').files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
                     if (confirm('Backup laden? Überschreibt aktuelle Daten!')) {
-                        inventory = data.inventory || [];
-                        sales = data.sales || [];
+                        inventory = data.inventory || []; sales = data.sales || [];
                         localStorage.setItem('inventory', JSON.stringify(inventory));
                         localStorage.setItem('sales', JSON.stringify(sales));
-                        showMessage('✅ Backup geladen!', 'success');
-                        updateSaleItems();
+                        showMessage('✅ Backup geladen!', 'success'); updateSaleItems();
                     }
-                } catch (e) {
-                    showMessage('❌ Ungültiges Backup', 'error');
-                }
+                } catch (e) { showMessage('❌ Ungültiges Backup', 'error'); }
             };
             reader.readAsText(file);
         }
-        
         function clearAll() {
             if (confirm('ACHTUNG: Alle Daten löschen?')) {
-                inventory = [];
-                sales = [];
-                localStorage.clear();
-                showMessage('✅ Alle Daten gelöscht', 'success');
-                updateSaleItems();
-                updateAppStats();
+                inventory = []; sales = [];
+                localStorage.removeItem('inventory'); localStorage.removeItem('sales');
+                showMessage('✅ Alle Daten gelöscht', 'success'); updateSaleItems(); updateAppStats();
             }
         }
-        
-        // Stats
+
+        // === UTILS ===
         function updateAppStats() {
-            const stats = {
-                items: inventory.length,
-                sales: sales.length,
-                storage: new Blob([JSON.stringify(inventory) + JSON.stringify(sales)]).size
-            };
-            
-            document.getElementById('appStats').innerHTML = `
-                <p><strong>Artikel:</strong> ${stats.items}</p>
-                <p><strong>Verkäufe:</strong> ${stats.sales}</p>
-                <p><strong>Speicher:</strong> ${(stats.storage / 1024).toFixed(2)} KB</p>
-            `;
+            const sz = new Blob([JSON.stringify(inventory) + JSON.stringify(sales)]).size;
+            const hasKey = getApiKey() ? '✅ Aktiv' : '❌ Nicht konfiguriert';
+            document.getElementById('appStats').innerHTML = '<p><strong>Artikel:</strong> ' + inventory.length + '</p><p><strong>Verkäufe:</strong> ' + sales.length + '</p><p><strong>Speicher:</strong> ' + (sz / 1024).toFixed(2) + ' KB</p><p><strong>KI-Scanner:</strong> ' + hasKey + '</p>';
         }
-        
-        // Utils
         function download(content, filename, type) {
-            const blob = new Blob([content], { type });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
+            const blob = new Blob([content], { type }); const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
         }
-        
         function showMessage(text, type) {
             const msg = document.getElementById('message');
-            msg.textContent = text;
-            msg.className = 'message ' + type;
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
+            msg.textContent = text; msg.className = 'message ' + type; msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 4000);
         }
-        
-        console.log('✅ App bereit');
+        console.log('✅ App bereit — KI-Scanner verfügbar');
     </script>
 </body>
 </html>
