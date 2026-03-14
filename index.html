@@ -99,6 +99,11 @@
         .sale-result-item .sri-name { font-weight: 600; font-size: 0.95em; color: #333; }
         .sale-result-item .sri-details { font-size: 0.8em; color: #6c757d; }
         .sale-result-item .sri-size { background: #007bff; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
+        .buyer-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid #007bff; border-top: none; border-radius: 0 0 8px 8px; max-height: 180px; overflow-y: auto; z-index: 100; box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+        .buyer-option { padding: 10px 12px; cursor: pointer; font-size: 0.95em; transition: background 0.1s; border-bottom: 1px solid #f0f0f0; }
+        .buyer-option:last-child { border-bottom: none; }
+        .buyer-option:hover, .buyer-option:active { background: #e8f0fe; }
+        .buyer-option .bo-new { color: #007bff; font-style: italic; }
         .api-modal-box { background: white; border-radius: 16px; padding: 25px; max-width: 450px; width: 100%; }
         .api-modal-box h3 { margin: 0 0 10px 0; color: #333; }
         .api-modal-box p { color: #6c757d; font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; }
@@ -238,10 +243,11 @@
                     </div>
                     
                     <div class="input-row">
-                        <div>
+                        <div style="position: relative;">
                             <label>Plattform / Käufer:</label>
-                            <input type="text" id="saleBuyer" list="buyerList" placeholder="z.B. StockX, GOAT, Max Mustermann...">
-                            <datalist id="buyerList"></datalist>
+                            <input type="text" id="saleBuyer" placeholder="z.B. StockX, GOAT..." autocomplete="off"
+                                onfocus="showBuyerDropdown()" oninput="filterBuyerDropdown()">
+                            <div id="buyerDropdown" class="buyer-dropdown" style="display: none;"></div>
                         </div>
                         <div><label>Gebühren (EUR):</label><input type="number" id="saleFees" placeholder="0" step="0.01"></div>
                     </div>
@@ -730,7 +736,7 @@
 
         // === SALES ===
         let selectedSaleIdx = null;
-        let savedBuyers = JSON.parse(localStorage.getItem('savedBuyers') || '["StockX","GOAT","eBay","Kleiderkreisel","Instagram","Privat"]');
+        let savedBuyers = JSON.parse(localStorage.getItem('savedBuyers') || '["StockX","GOAT","eBay","Kleinanzeigen","Privat"]');
 
         function updateSaleItems() {
             // Populate size filter with available sizes
@@ -749,12 +755,55 @@
             searchSaleItems();
         }
 
-        function updateBuyerList() {
-            const dl = document.getElementById('buyerList');
-            if (!dl) return;
-            dl.innerHTML = '';
-            savedBuyers.forEach(b => { const o = document.createElement('option'); o.value = b; dl.appendChild(o); });
+        function updateBuyerList() { /* handled by dropdown now */ }
+
+        function showBuyerDropdown() {
+            filterBuyerDropdown();
         }
+
+        function filterBuyerDropdown() {
+            const input = document.getElementById('saleBuyer');
+            const dd = document.getElementById('buyerDropdown');
+            const query = (input.value || '').trim().toLowerCase();
+
+            let filtered = savedBuyers;
+            if (query) {
+                filtered = savedBuyers.filter(b => b.toLowerCase().includes(query));
+            }
+
+            // Sort: exact starts-with matches first
+            filtered.sort((a, b) => {
+                const aStarts = a.toLowerCase().startsWith(query) ? 0 : 1;
+                const bStarts = b.toLowerCase().startsWith(query) ? 0 : 1;
+                return aStarts - bStarts || a.localeCompare(b);
+            });
+
+            let html = filtered.map(b =>
+                '<div class="buyer-option" onmousedown="selectBuyer(\'' + b.replace(/'/g, "\\'") + '\')">' + b + '</div>'
+            ).join('');
+
+            // If typed text doesn't match any existing entry exactly, show "add new" hint
+            if (query && !savedBuyers.some(b => b.toLowerCase() === query)) {
+                html += '<div class="buyer-option" onmousedown="selectBuyer(\'' + input.value.trim().replace(/'/g, "\\'") + '\')"><span class="bo-new">＋ "' + input.value.trim() + '" neu hinzufügen</span></div>';
+            }
+
+            dd.innerHTML = html;
+            dd.style.display = html ? 'block' : 'none';
+        }
+
+        function selectBuyer(name) {
+            document.getElementById('saleBuyer').value = name;
+            document.getElementById('buyerDropdown').style.display = 'none';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dd = document.getElementById('buyerDropdown');
+            const input = document.getElementById('saleBuyer');
+            if (dd && input && !input.contains(e.target) && !dd.contains(e.target)) {
+                dd.style.display = 'none';
+            }
+        });
 
         function searchSaleItems() {
             const container = document.getElementById('saleSearchResults');
