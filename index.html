@@ -94,6 +94,11 @@
         .scan-actions button { flex: 1; }
         .api-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center; padding: 20px; }
         .api-modal.active { display: flex; }
+        .sale-result-item { padding: 10px 12px; margin: 4px 0; background: white; border: 2px solid #dee2e6; border-radius: 8px; cursor: pointer; transition: all 0.15s; display: flex; justify-content: space-between; align-items: center; }
+        .sale-result-item:hover, .sale-result-item:active { border-color: #007bff; background: #f0f4ff; }
+        .sale-result-item .sri-name { font-weight: 600; font-size: 0.95em; color: #333; }
+        .sale-result-item .sri-details { font-size: 0.8em; color: #6c757d; }
+        .sale-result-item .sri-size { background: #007bff; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 600; }
         .api-modal-box { background: white; border-radius: 16px; padding: 25px; max-width: 450px; width: 100%; }
         .api-modal-box h3 { margin: 0 0 10px 0; color: #333; }
         .api-modal-box p { color: #6c757d; font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; }
@@ -182,7 +187,12 @@
             <div id="inventory" class="tab-content">
                 <div class="section">
                     <h2>📦 Inventar</h2>
-                    <div style="margin-bottom: 10px;"><button onclick="loadInventory()" class="btn-success">🔄 Aktualisieren</button><button onclick="exportInventoryCSV()" class="btn-warning">📊 CSV Export</button></div>
+                    <div style="margin-bottom: 10px;">
+                        <button onclick="loadInventory()" class="btn-success">🔄 Aktualisieren</button>
+                        <button onclick="exportInventoryCSV()" class="btn-warning">📊 CSV Export</button>
+                        <button onclick="document.getElementById('csvFileInv').click()" class="btn-info">📥 CSV Import</button>
+                        <input type="file" id="csvFileInv" accept=".csv" style="display: none;" onchange="importCSV(); this.value='';">
+                    </div>
                     <div class="search-box"><label>Suche:</label><input type="text" id="searchInput" placeholder="Name, SKU, Größe..." onkeyup="searchInventory()"></div>
                     <div class="filter-group">
                         <div><label>Status:</label><select id="statusFilter" onchange="searchInventory()"><option value="all">Alle</option><option value="available">Verfügbar</option><option value="sold">Verkauft</option></select></div>
@@ -196,16 +206,47 @@
             <div id="sales" class="tab-content">
                 <div class="section">
                     <h2>💰 Verkauf erfassen</h2>
-                    <label>Artikel:</label><select id="saleItem"><option value="">-- Wählen --</option></select>
+                    
+                    <div class="input-row">
+                        <div>
+                            <label>SKU suchen:</label>
+                            <input type="text" id="saleSku" placeholder="SKU eingeben..." oninput="searchSaleItems()">
+                        </div>
+                        <div>
+                            <label>Größe filtern:</label>
+                            <select id="saleSizeFilter" onchange="searchSaleItems()">
+                                <option value="all">Alle Größen</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="saleSearchResults" style="max-height: 200px; overflow-y: auto; margin: 10px 0;"></div>
+                    <div id="saleSelectedItem" style="display: none; margin: 10px 0; padding: 12px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px;">
+                        <strong>✅ Ausgewählt:</strong> <span id="saleSelectedText"></span>
+                        <button onclick="clearSaleSelection()" class="btn-secondary" style="float: right; padding: 4px 10px; margin: 0; font-size: 12px;">✖ Ändern</button>
+                        <input type="hidden" id="saleItemIdx">
+                    </div>
+                    
                     <div class="input-row" style="margin-top: 10px;">
-                        <div><label>Verkaufspreis (EUR):</label><input type="number" id="salePrice" placeholder="0" step="0.01"></div>
+                        <div><label>Verkaufspreis (EUR)*:</label><input type="number" id="salePrice" placeholder="0" step="0.01"></div>
                         <div><label>Verkaufsdatum:</label><input type="date" id="saleDate"></div>
                     </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="saleIncludeVat">
+                        <label for="saleIncludeVat" style="margin: 0;">Verkaufspreis enthält MwSt. (19%)</label>
+                    </div>
+                    
                     <div class="input-row">
-                        <div><label>Plattform:</label><select id="salePlatform"><option>StockX</option><option>GOAT</option><option>eBay</option><option>Kleiderkreisel</option><option>Instagram</option><option>Privat</option></select></div>
+                        <div>
+                            <label>Plattform / Käufer:</label>
+                            <input type="text" id="saleBuyer" list="buyerList" placeholder="z.B. StockX, GOAT, Max Mustermann...">
+                            <datalist id="buyerList"></datalist>
+                        </div>
                         <div><label>Gebühren (EUR):</label><input type="number" id="saleFees" placeholder="0" step="0.01"></div>
                     </div>
-                    <button onclick="recordSale()" class="btn-success" style="width: 100%; margin-top: 10px;">💰 Verkauf erfassen</button>
+                    
+                    <button onclick="recordSale()" class="btn-success" style="width: 100%; margin-top: 10px; font-size: 1.1em;">💰 Verkauf erfassen</button>
                 </div>
                 <div class="section">
                     <h2>📊 Verkaufshistorie</h2>
@@ -688,32 +729,136 @@
         }
 
         // === SALES ===
+        let selectedSaleIdx = null;
+        let savedBuyers = JSON.parse(localStorage.getItem('savedBuyers') || '["StockX","GOAT","eBay","Kleiderkreisel","Instagram","Privat"]');
+
         function updateSaleItems() {
-            const sel = document.getElementById('saleItem');
-            sel.innerHTML = '<option value="">-- Wählen --</option>';
-            inventory.filter(i => i.status === 'available').forEach(item => {
-                const ri = inventory.indexOf(item);
-                const o = document.createElement('option'); o.value = ri;
-                o.textContent = item.name + ' - ' + item.sku + ' - ' + item.size;
-                sel.appendChild(o);
+            // Populate size filter with available sizes
+            const availSizes = [...new Set(inventory.filter(i => i.status === 'available').map(i => i.size))];
+            availSizes.sort((a, b) => {
+                const na = parseFloat(a.replace('⅓','.333').replace('⅔','.667'));
+                const nb = parseFloat(b.replace('⅓','.333').replace('⅔','.667'));
+                return na - nb;
             });
+            const sizeFilter = document.getElementById('saleSizeFilter');
+            if (sizeFilter) {
+                sizeFilter.innerHTML = '<option value="all">Alle Größen</option>';
+                availSizes.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sizeFilter.appendChild(o); });
+            }
+            updateBuyerList();
+            searchSaleItems();
+        }
+
+        function updateBuyerList() {
+            const dl = document.getElementById('buyerList');
+            if (!dl) return;
+            dl.innerHTML = '';
+            savedBuyers.forEach(b => { const o = document.createElement('option'); o.value = b; dl.appendChild(o); });
+        }
+
+        function searchSaleItems() {
+            const container = document.getElementById('saleSearchResults');
+            if (!container) return;
+            
+            // Don't show results if an item is already selected
+            if (selectedSaleIdx !== null) { container.innerHTML = ''; return; }
+            
+            const skuQuery = (document.getElementById('saleSku')?.value || '').trim().toLowerCase();
+            const sizeFilter = document.getElementById('saleSizeFilter')?.value || 'all';
+            
+            let results = inventory.filter(i => i.status === 'available');
+            
+            if (skuQuery) {
+                results = results.filter(i => 
+                    i.sku.toLowerCase().includes(skuQuery) || 
+                    i.name.toLowerCase().includes(skuQuery)
+                );
+            }
+            if (sizeFilter !== 'all') {
+                results = results.filter(i => i.size === sizeFilter);
+            }
+            
+            if (!results.length) {
+                container.innerHTML = '<p style="text-align:center;color:#6c757d;padding:15px;font-size:0.9em;">' + 
+                    (skuQuery || sizeFilter !== 'all' ? '🔍 Keine passenden Artikel gefunden' : '📦 Gib eine SKU ein oder wähle eine Größe') + '</p>';
+                return;
+            }
+            
+            container.innerHTML = results.map(item => {
+                const ri = inventory.indexOf(item);
+                return '<div class="sale-result-item" onclick="selectSaleItem(' + ri + ')">' +
+                    '<div><div class="sri-name">' + item.name + '</div>' +
+                    '<div class="sri-details">' + item.sku + ' · ' + item.brand + (item.color ? ' · ' + item.color : '') + ' · EK: €' + item.purchasePrice + '</div></div>' +
+                    '<span class="sri-size">' + item.size + '</span></div>';
+            }).join('');
+        }
+
+        function selectSaleItem(idx) {
+            selectedSaleIdx = idx;
+            const item = inventory[idx];
+            document.getElementById('saleSelectedItem').style.display = 'block';
+            document.getElementById('saleSelectedText').textContent = item.name + ' — ' + item.sku + ' — Größe ' + item.size + ' — EK: €' + item.purchasePrice;
+            document.getElementById('saleItemIdx').value = idx;
+            document.getElementById('saleSearchResults').innerHTML = '';
+        }
+
+        function clearSaleSelection() {
+            selectedSaleIdx = null;
+            document.getElementById('saleSelectedItem').style.display = 'none';
+            document.getElementById('saleItemIdx').value = '';
+            searchSaleItems();
         }
 
         function recordSale() {
-            const idx = document.getElementById('saleItem').value;
+            const idx = selectedSaleIdx;
             const price = parseFloat(document.getElementById('salePrice').value);
             const date = document.getElementById('saleDate').value;
             const fees = parseFloat(document.getElementById('saleFees').value) || 0;
-            if (!idx || !price || !date) { showMessage('❌ Bitte Artikel, Preis und Datum ausfüllen', 'error'); return; }
+            const buyer = (document.getElementById('saleBuyer')?.value || '').trim();
+            const saleInclVat = document.getElementById('saleIncludeVat')?.checked || false;
+            
+            if (idx === null || idx === undefined) { showMessage('❌ Bitte einen Artikel auswählen', 'error'); return; }
+            if (!price) { showMessage('❌ Bitte Verkaufspreis eingeben', 'error'); return; }
+            if (!date) { showMessage('❌ Bitte Verkaufsdatum eingeben', 'error'); return; }
+            
             const item = inventory[idx];
-            const netP = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
-            const profit = price - fees - netP;
-            sales.push({ id: Date.now(), itemId: item.id, name: item.name, sku: item.sku, size: item.size, purchasePrice: item.purchasePrice, includeVat: item.includeVat, salePrice: price, fees, profit, platform: document.getElementById('salePlatform').value, date, recorded: new Date().toISOString() });
+            const netPurchase = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
+            const netSale = saleInclVat ? price / 1.19 : price;
+            const profit = netSale - fees - netPurchase;
+            
+            // Save buyer to list if new
+            if (buyer && !savedBuyers.includes(buyer)) {
+                savedBuyers.push(buyer);
+                localStorage.setItem('savedBuyers', JSON.stringify(savedBuyers));
+                updateBuyerList();
+            }
+            
+            sales.push({
+                id: Date.now(), itemId: item.id, name: item.name, sku: item.sku,
+                size: item.size, purchasePrice: item.purchasePrice, includeVat: item.includeVat,
+                salePrice: price, saleIncludeVat: saleInclVat, fees, profit,
+                platform: buyer || 'Unbekannt', date, recorded: new Date().toISOString()
+            });
             localStorage.setItem('sales', JSON.stringify(sales));
-            inventory[idx].status = 'sold'; inventory[idx].saleDate = date; inventory[idx].salePrice = price;
+            
+            inventory[idx].status = 'sold';
+            inventory[idx].saleDate = date;
+            inventory[idx].salePrice = price;
             localStorage.setItem('inventory', JSON.stringify(inventory));
+            
             showMessage('✅ Verkauf erfasst! Gewinn: €' + profit.toFixed(2), 'success');
-            document.getElementById('saleItem').value = ''; document.getElementById('salePrice').value = ''; document.getElementById('saleFees').value = '';
+            
+            // Reset form
+            selectedSaleIdx = null;
+            document.getElementById('saleSelectedItem').style.display = 'none';
+            document.getElementById('saleItemIdx').value = '';
+            document.getElementById('saleSku').value = '';
+            document.getElementById('salePrice').value = '';
+            document.getElementById('saleFees').value = '';
+            document.getElementById('saleBuyer').value = '';
+            document.getElementById('saleIncludeVat').checked = false;
+            document.getElementById('saleSizeFilter').value = 'all';
+            
             updateSaleItems();
         }
 
@@ -727,11 +872,11 @@
                 div.innerHTML = '<h4>' + sale.name + '</h4><div class="item-details">' +
                     '<div class="item-detail"><strong>SKU:</strong> ' + sale.sku + '</div>' +
                     '<div class="item-detail"><strong>Größe:</strong> ' + sale.size + '</div>' +
-                    '<div class="item-detail"><strong>Einkauf:</strong> €' + sale.purchasePrice + '</div>' +
-                    '<div class="item-detail"><strong>Verkauf:</strong> €' + sale.salePrice + '</div>' +
+                    '<div class="item-detail"><strong>Einkauf:</strong> €' + sale.purchasePrice + (sale.includeVat ? ' (inkl.)' : '') + '</div>' +
+                    '<div class="item-detail"><strong>Verkauf:</strong> €' + sale.salePrice + (sale.saleIncludeVat ? ' (inkl.)' : '') + '</div>' +
                     '<div class="item-detail"><strong>Gebühren:</strong> €' + sale.fees + '</div>' +
                     '<div class="item-detail"><strong>Gewinn:</strong> <span class="' + col + '">€' + sale.profit.toFixed(2) + '</span></div>' +
-                    '<div class="item-detail"><strong>Plattform:</strong> ' + sale.platform + '</div>' +
+                    '<div class="item-detail"><strong>Käufer:</strong> ' + (sale.platform || 'Unbekannt') + '</div>' +
                     '<div class="item-detail"><strong>Datum:</strong> ' + sale.date + '</div></div>' +
                     '<button onclick="deleteSale(' + ri + ')" class="btn-danger">🗑️ Löschen</button>';
                 c.appendChild(div);
@@ -780,12 +925,13 @@
         }
         function exportSalesCSV() {
             if (!sales.length) { showMessage('❌ Keine Verkäufe', 'error'); return; }
-            const csv = ['SKU,Name,Größe,Einkauf,Verkauf,Gebühren,Gewinn,Plattform,Datum', ...sales.map(s => [s.sku, '"' + s.name + '"', s.size, s.purchasePrice, s.salePrice, s.fees, s.profit.toFixed(2), s.platform, s.date].join(','))].join('\n');
+            const csv = ['SKU,Name,Größe,Einkauf,EK inkl MwSt,Verkauf,VK inkl MwSt,Gebühren,Gewinn,Käufer,Datum', ...sales.map(s => [s.sku, '"' + s.name + '"', s.size, s.purchasePrice, s.includeVat ? 'Ja' : 'Nein', s.salePrice, s.saleIncludeVat ? 'Ja' : 'Nein', s.fees, s.profit.toFixed(2), '"' + (s.platform || '') + '"', s.date].join(','))].join('\n');
             download(csv, 'verkäufe-' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv');
             showMessage('✅ Verkäufe CSV exportiert!', 'success');
         }
         function importCSV() {
-            const file = document.getElementById('csvFile').files[0]; if (!file) return;
+            const file = (document.getElementById('csvFileInv')?.files[0]) || (document.getElementById('csvFile')?.files[0]);
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
@@ -799,6 +945,7 @@
                     }
                     localStorage.setItem('inventory', JSON.stringify(inventory));
                     showMessage('✅ ' + count + ' Artikel importiert!', 'success');
+                    loadInventory();
                 } catch (e) { showMessage('❌ Import fehlgeschlagen', 'error'); }
             };
             reader.readAsText(file);
