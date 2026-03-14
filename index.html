@@ -132,16 +132,16 @@
                     <h3>📸 Schnell-Erfassung (KI-Erkennung)</h3>
                     <button onclick="startScanner()">📷 Live-Kamera</button>
                     <button onclick="document.getElementById('photoCaptureInput').click()">📸 Foto aufnehmen</button>
-                    <button onclick="document.getElementById('photoGalleryInput').click()">🖼️ Aus Galerie wählen</button>
+                    <button onclick="document.getElementById('photoGalleryInput').click()">🖼️ Aus Galerie wählen (auch mehrere)</button>
                     <input type="file" id="photoCaptureInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto(this)">
-                    <input type="file" id="photoGalleryInput" accept="image/*" style="display: none;" onchange="handlePhoto(this)">
+                    <input type="file" id="photoGalleryInput" accept="image/*" multiple style="display: none;" onchange="handleMultiplePhotos(this)">
                     <div id="scannerPreview" style="display: none;">
                         <video id="video" autoplay playsinline></video>
                         <canvas id="canvas" style="display: none;"></canvas>
                         <button onclick="captureFrame()" class="btn-success" style="color: white;">📸 Aufnehmen & Analysieren</button>
                         <button onclick="stopScanner()" class="btn-danger" style="color: white;">❌ Beenden</button>
                     </div>
-                    <p class="scan-hint">📋 Fotografiere das Schuhlabel (Innenseite der Zunge). Die KI erkennt automatisch: SKU, Größe, Farbe, Modell & Marke.<br>💡 Tipp: Mehrere Labels auf einem Foto? Die KI erkennt alle und du bestätigst jeden Schuh einzeln.</p>
+                    <p class="scan-hint">📋 Fotografiere das Schuhlabel (Innenseite der Zunge). Die KI erkennt automatisch: SKU, Größe, Farbe, Modell & Marke.<br>💡 Mehrere Fotos aus der Galerie? Einfach alle markieren — sie werden nacheinander verarbeitet.</p>
                 </div>
                 <div class="section">
                     <h2>📝 Grunddaten</h2>
@@ -673,6 +673,76 @@
             inputEl.value = '';
         }
 
+        // Multi-photo queue
+        let photoQueue = [];
+        let photoQueueIndex = 0;
+        let photoQueueTotal = 0;
+
+        async function handleMultiplePhotos(inputEl) {
+            const files = inputEl ? Array.from(inputEl.files) : [];
+            if (!files.length) return;
+            inputEl.value = '';
+
+            if (files.length === 1) {
+                // Single file — use normal flow
+                try {
+                    showMessage('📷 Foto wird verarbeitet...', 'info');
+                    const base64 = await imageToBase64(files[0]);
+                    await analyzeLabel(base64);
+                } catch (e) { showMessage('❌ Fehler beim Verarbeiten des Fotos', 'error'); console.error(e); }
+                return;
+            }
+
+            // Multiple files — queue them
+            showMessage('📷 ' + files.length + ' Fotos ausgewählt — werden nacheinander verarbeitet...', 'info');
+
+            photoQueue = [];
+            photoQueueIndex = 0;
+            photoQueueTotal = files.length;
+
+            // Convert all to base64 first
+            for (let i = 0; i < files.length; i++) {
+                try {
+                    const base64 = await imageToBase64(files[i]);
+                    photoQueue.push(base64);
+                } catch (e) {
+                    console.error('Fehler bei Foto ' + (i + 1) + ':', e);
+                }
+            }
+
+            if (!photoQueue.length) {
+                showMessage('❌ Keine Fotos konnten verarbeitet werden', 'error');
+                return;
+            }
+
+            photoQueueTotal = photoQueue.length;
+            processNextPhoto();
+        }
+
+        async function processNextPhoto() {
+            if (photoQueueIndex >= photoQueue.length) {
+                photoQueue = [];
+                photoQueueIndex = 0;
+                showMessage('✅ Alle ' + photoQueueTotal + ' Fotos verarbeitet!', 'success');
+                return;
+            }
+
+            showMessage('📷 Foto ' + (photoQueueIndex + 1) + ' von ' + photoQueueTotal + ' wird analysiert...', 'info');
+            await analyzeLabel(photoQueue[photoQueueIndex]);
+        }
+
+        // Hook: after saving an item from multi-photo queue, process next photo
+        function triggerNextPhotoAfterSave() {
+            if (photoQueue.length > 0 && photoQueueIndex < photoQueue.length - 1) {
+                photoQueueIndex++;
+                setTimeout(processNextPhoto, 600);
+            } else if (photoQueue.length > 0) {
+                // Last photo done
+                photoQueue = [];
+                photoQueueIndex = 0;
+            }
+        }
+
         // === SIZE GRID ===
         function createSizeGrid() {
             const grid = document.getElementById('sizeGrid');
@@ -765,9 +835,13 @@
             }
             
             resetForm(); updateSaleItems();
-            // If multi-scan: auto-show next label after brief delay
+            // If multi-scan (multiple labels on one photo): auto-show next label
             if (waitingForSave) {
                 setTimeout(triggerNextScanAfterSave, 600);
+            }
+            // If multi-photo queue: trigger next photo after save
+            else if (photoQueue.length > 0 && photoQueueIndex < photoQueue.length) {
+                setTimeout(triggerNextPhotoAfterSave, 600);
             }
         }
 
