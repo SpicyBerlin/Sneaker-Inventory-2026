@@ -180,7 +180,12 @@
                         <div><label>Einkaufsdatum:</label><input type="date" id="purchaseDate"></div>
                     </div>
                     <div class="input-row">
-                        <div><label>Lagerort / Händler:</label><input type="text" id="location" placeholder="z.B. Nike Store, Regal A1"></div>
+                        <div style="position: relative;">
+                            <label>Lagerort / Händler:</label>
+                            <input type="text" id="location" placeholder="z.B. G26, SCH26..." autocomplete="off"
+                                onclick="showLocationDropdown()" onfocus="showLocationDropdown()" oninput="filterLocationDropdown()">
+                            <div id="locationDropdown" class="buyer-dropdown" style="display: none;"></div>
+                        </div>
                     </div>
                     <div class="checkbox-group"><input type="checkbox" id="includeVat" onchange="calcProfit()"><label for="includeVat" style="margin: 0;">Preis enthält MwSt. (19%)</label></div>
                     <div id="profitBox" style="display: none; margin-top: 10px; padding: 10px; background: #d1ecf1; border-radius: 6px;"><strong>💰 Potenzieller Gewinn:</strong> <span id="profitValue"></span></div>
@@ -339,6 +344,7 @@
         let selectedSize = null;
         let stream = null;
         let pendingImageBase64 = null;
+        let editingItemIdx = null;
 
         const sizes = [
             '35','35.5','36','36.5','36⅔',
@@ -723,19 +729,41 @@
             const name = document.getElementById('productName').value.trim();
             const price = document.getElementById('purchasePrice').value;
             if (!sku || !name || !selectedSize || !price) { showMessage('❌ Bitte SKU, Name, Größe und Preis ausfüllen!', 'error'); return; }
-            const item = {
-                id: Date.now(), sku: sku.toUpperCase(), name, brand: document.getElementById('brand').value,
+            
+            const loc = document.getElementById('location').value.trim();
+            // Save new location if not already in list
+            if (loc && !savedLocations.includes(loc)) {
+                savedLocations.push(loc);
+                localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
+            }
+            
+            const itemData = {
+                sku: sku.toUpperCase(), name: name, brand: document.getElementById('brand').value,
                 color: document.getElementById('color').value, retailPrice: parseFloat(document.getElementById('retailPrice').value) || 0,
                 releaseDate: document.getElementById('releaseDate').value, size: selectedSize,
                 purchasePrice: parseFloat(price), includeVat: document.getElementById('includeVat').checked,
-                location: document.getElementById('location').value, date: document.getElementById('purchaseDate').value,
+                location: loc, date: document.getElementById('purchaseDate').value,
                 notes: document.getElementById('notes').value,
-                stockx: { lastSale: parseFloat(document.getElementById('lastSale').value) || 0, highestBid: parseFloat(document.getElementById('highestBid').value) || 0, lowestAsk: parseFloat(document.getElementById('lowestAsk').value) || 0 },
-                status: 'available', added: new Date().toISOString()
+                stockx: { lastSale: parseFloat(document.getElementById('lastSale').value) || 0, highestBid: parseFloat(document.getElementById('highestBid').value) || 0, lowestAsk: parseFloat(document.getElementById('lowestAsk').value) || 0 }
             };
-            inventory.push(item);
-            localStorage.setItem('inventory', JSON.stringify(inventory));
-            showMessage('✅ Artikel gespeichert!', 'success');
+            
+            if (editingItemIdx !== null) {
+                // Edit mode: update existing item
+                const existing = inventory[editingItemIdx];
+                Object.assign(existing, itemData);
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                showMessage('✅ Artikel aktualisiert!', 'success');
+                editingItemIdx = null;
+            } else {
+                // New item
+                itemData.id = Date.now();
+                itemData.status = 'available';
+                itemData.added = new Date().toISOString();
+                inventory.push(itemData);
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                showMessage('✅ Artikel gespeichert!', 'success');
+            }
+            
             resetForm(); updateSaleItems();
             // If multi-scan: auto-show next label after brief delay
             if (waitingForSave) {
@@ -744,12 +772,19 @@
         }
 
         function resetForm() {
-            ['sku','productName','color','retailPrice','releaseDate','purchasePrice','location','notes','lastSale','highestBid','lowestAsk'].forEach(id => { document.getElementById(id).value = ''; });
+            ['sku','productName','color','retailPrice','releaseDate','purchasePrice','location','notes','lastSale','highestBid','lowestAsk'].forEach(function(id) { document.getElementById(id).value = ''; });
             document.getElementById('includeVat').checked = false;
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('.size-btn').forEach(function(b) { b.classList.remove('selected'); });
             selectedSize = null;
             document.getElementById('profitBox').style.display = 'none';
             document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
+            // Reset edit state
+            editingItemIdx = null;
+            var saveBtn = document.querySelector('#add .btn-success[onclick="saveItem()"]');
+            if (saveBtn) {
+                saveBtn.textContent = '💾 Artikel speichern';
+                saveBtn.style.background = '#28a745';
+            }
         }
 
         // === INVENTORY ===
@@ -805,7 +840,7 @@
                     (item.stockx.lowestAsk ? '<div class="stockx-item"><small>Niedrigste Forderung</small><br><strong>€' + item.stockx.lowestAsk + '</strong></div>' : '') +
                     '</div></div>' : '') +
                     (item.notes ? '<p style="margin-top:8px;font-size:0.85em;font-style:italic;color:#6c757d;">' + item.notes + '</p>' : '') +
-                    '<div style="margin-top:10px;"><button onclick="deleteItem(' + ri + ')" class="btn-danger">🗑️ Löschen</button></div>';
+                    '<div style="margin-top:10px;"><button onclick="editItem(' + ri + ')" class="btn-info">✏️ Bearbeiten</button> <button onclick="deleteItem(' + ri + ')" class="btn-danger">🗑️ Löschen</button></div>';
                 c.appendChild(div);
             });
             showMessage(filtered.length + ' von ' + inventory.length + ' Artikeln', 'info');
@@ -885,12 +920,107 @@
         }
 
         document.addEventListener('click', function(e) {
-            const dd = document.getElementById('buyerDropdown');
-            const input = document.getElementById('saleBuyer');
+            var dd = document.getElementById('buyerDropdown');
+            var input = document.getElementById('saleBuyer');
             if (dd && input && e.target !== input && !dd.contains(e.target)) {
                 dd.style.display = 'none';
             }
+            var ld = document.getElementById('locationDropdown');
+            var li = document.getElementById('location');
+            if (ld && li && e.target !== li && !ld.contains(e.target)) {
+                ld.style.display = 'none';
+            }
         });
+
+        // === LOCATION DROPDOWN ===
+        var savedLocations = JSON.parse(localStorage.getItem('savedLocations') || '["G26","SCH26","AV26","AZ26","DG26"]');
+
+        function showLocationDropdown() {
+            setTimeout(filterLocationDropdown, 50);
+        }
+
+        function filterLocationDropdown() {
+            var input = document.getElementById('location');
+            var dd = document.getElementById('locationDropdown');
+            if (!input || !dd) return;
+            var query = (input.value || '').trim().toLowerCase();
+
+            var filtered = savedLocations.slice();
+            if (query) {
+                filtered = filtered.filter(function(b) { return b.toLowerCase().includes(query); });
+            }
+            filtered.sort(function(a, b) {
+                var aS = a.toLowerCase().startsWith(query || '') ? 0 : 1;
+                var bS = b.toLowerCase().startsWith(query || '') ? 0 : 1;
+                return aS - bS || a.localeCompare(b);
+            });
+
+            var html = '';
+            filtered.forEach(function(b) {
+                var safe = b.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+                html += '<div class="buyer-option" onmousedown="event.preventDefault(); selectLocation(\'' + safe + '\')">' + b + '</div>';
+            });
+            if (query && !savedLocations.some(function(b) { return b.toLowerCase() === query; })) {
+                var safeNew = input.value.trim().replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+                html += '<div class="buyer-option" onmousedown="event.preventDefault(); selectLocation(\'' + safeNew + '\')"><span class="bo-new">＋ &quot;' + input.value.trim() + '&quot; neu hinzufügen</span></div>';
+            }
+            dd.innerHTML = html;
+            dd.style.display = html ? 'block' : 'none';
+        }
+
+        function selectLocation(name) {
+            document.getElementById('location').value = name.replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+            document.getElementById('locationDropdown').style.display = 'none';
+        }
+
+        // === EDIT ITEM ===
+
+        function editItem(idx) {
+            var item = inventory[idx];
+            if (!item) return;
+
+            editingItemIdx = idx;
+
+            // Switch to Add tab
+            document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            document.querySelectorAll('.tab')[0].classList.add('active');
+            document.getElementById('add').classList.add('active');
+
+            // Fill form
+            document.getElementById('sku').value = item.sku || '';
+            document.getElementById('productName').value = item.name || '';
+            document.getElementById('color').value = item.color || '';
+            document.getElementById('retailPrice').value = item.retailPrice || '';
+            document.getElementById('releaseDate').value = item.releaseDate || '';
+            document.getElementById('purchasePrice').value = item.purchasePrice || '';
+            document.getElementById('purchaseDate').value = item.date || '';
+            document.getElementById('location').value = item.location || '';
+            document.getElementById('includeVat').checked = item.includeVat || false;
+            document.getElementById('notes').value = item.notes || '';
+            document.getElementById('lastSale').value = item.stockx?.lastSale || '';
+            document.getElementById('highestBid').value = item.stockx?.highestBid || '';
+            document.getElementById('lowestAsk').value = item.stockx?.lowestAsk || '';
+
+            // Brand
+            var sel = document.getElementById('brand');
+            for (var i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].value === item.brand) { sel.selectedIndex = i; break; }
+            }
+
+            // Size
+            selectSizeInGrid(item.size);
+
+            // Change save button
+            var saveBtn = document.querySelector('#add .btn-success[onclick="saveItem()"]');
+            if (saveBtn) {
+                saveBtn.textContent = '💾 Änderungen speichern';
+                saveBtn.style.background = '#17a2b8';
+            }
+
+            showMessage('✏️ Bearbeite: ' + item.name + ' — Änderungen vornehmen und speichern.', 'info');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function searchSaleItems() {
             const container = document.getElementById('saleSearchResults');
