@@ -49,6 +49,24 @@
         .size-btn.adidas-size.selected { background: #007bff; color: white; border-color: #007bff; }
         .item { border: 1px solid #dee2e6; padding: 12px; margin: 10px 0; border-radius: 10px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .item.sold { background: #ffe6e6; border-color: #dc3545; }
+        .item.returned { background: #fff3e0; border-color: #ff9800; }
+        .return-reminder { background: linear-gradient(135deg, #ff9800, #f44336); color: white; padding: 15px; border-radius: 10px; margin: 10px 0; cursor: pointer; }
+        .return-reminder h4 { margin: 0 0 8px 0; }
+        .return-reminder-item { background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 6px; margin: 5px 0; font-size: 0.9em; display: flex; justify-content: space-between; align-items: center; }
+        .return-reminder-item .days-left { font-weight: bold; padding: 2px 8px; border-radius: 10px; font-size: 0.85em; }
+        .days-critical { background: #f44336; color: white; }
+        .days-warning { background: #ff9800; color: white; }
+        .days-ok { background: rgba(255,255,255,0.3); }
+        .refund-pending { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; padding: 15px; border-radius: 10px; margin: 10px 0; }
+        .refund-pending h4 { margin: 0 0 10px 0; }
+        .refund-item { background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; margin: 8px 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .refund-item-info { flex: 1; min-width: 200px; font-size: 0.9em; }
+        .refund-item-actions { display: flex; align-items: center; gap: 8px; }
+        .refund-amount-input { width: 100px; padding: 6px 8px; border: 2px solid rgba(255,255,255,0.5); border-radius: 6px; background: rgba(255,255,255,0.2); color: white; font-size: 0.9em; font-weight: bold; }
+        .refund-amount-input::placeholder { color: rgba(255,255,255,0.6); }
+        .refund-confirm-btn { padding: 6px 14px; border: 2px solid white; background: rgba(255,255,255,0.2); color: white; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em; transition: all 0.2s; }
+        .refund-confirm-btn:hover { background: white; color: #6a11cb; }
+        .refund-confirmed { background: rgba(40,167,69,0.2); border-left: 4px solid #28a745; }
         .item h4 { margin: 0 0 8px 0; font-size: 1.1em; color: #333; }
         .item-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin: 10px 0; font-size: 0.85em; }
         .item-detail { background: #f8f9fa; padding: 8px; border-radius: 5px; }
@@ -121,6 +139,7 @@
             <button class="tab active" onclick="showTab('add')">📦 Erfassen</button>
             <button class="tab" onclick="showTab('inventory')">📋 Inventar</button>
             <button class="tab" onclick="showTab('sales')">💰 Verkäufe</button>
+            <button class="tab" onclick="showTab('returns')">↩️ Retouren</button>
             <button class="tab" onclick="showTab('dashboard')">📊 Dashboard</button>
             <button class="tab" onclick="showTab('settings')">⚙️ Settings</button>
         </div>
@@ -196,6 +215,13 @@
                         <div><label>Einkaufsdatum:</label><input type="date" id="purchaseDate"></div>
                     </div>
                     <div class="input-row">
+                        <div><label>Bestellnummer:</label><input type="text" id="orderNumber" placeholder="z.B. ORD-123456"></div>
+                        <div><label>Rechnungsdatum:</label><input type="date" id="invoiceDate"></div>
+                    </div>
+                    <div class="input-row">
+                        <div><label>Lieferdatum:</label><input type="date" id="deliveryDate"></div>
+                    </div>
+                    <div class="input-row">
                         <div style="position: relative;">
                             <label>Lagerort*:</label>
                             <input type="text" id="location" placeholder="z.B. G26, SCH26..." autocomplete="off"
@@ -229,7 +255,7 @@
                     </div>
                     <div class="search-box"><label>Suche:</label><input type="text" id="searchInput" placeholder="Name, SKU, Größe..." onkeyup="searchInventory()"></div>
                     <div class="filter-group">
-                        <div><label>Status:</label><select id="statusFilter" onchange="searchInventory()"><option value="all">Alle</option><option value="available">Verfügbar</option><option value="sold">Verkauft</option></select></div>
+                        <div><label>Status:</label><select id="statusFilter" onchange="searchInventory()"><option value="all">Alle</option><option value="available">Verfügbar</option><option value="sold">Verkauft</option><option value="returned">Retourniert</option></select></div>
                         <div><label>Marke:</label><select id="brandFilter" onchange="searchInventory()"><option value="all">Alle</option></select></div>
                         <div><label>Sortierung:</label><select id="sortSelect" onchange="searchInventory()"><option value="date-desc">Neueste zuerst</option><option value="date-asc">Älteste zuerst</option><option value="price-desc">Preis absteigend</option><option value="price-asc">Preis aufsteigend</option><option value="name">Name A-Z</option></select></div>
                     </div>
@@ -291,8 +317,19 @@
             </div>
             <!-- DASHBOARD TAB -->
             <div id="dashboard" class="tab-content">
+                <div id="returnReminderDashboard"></div>
                 <div class="section"><h2>📊 Performance</h2><div class="dashboard-grid" id="dashboardStats"></div></div>
                 <div class="section"><h2>🏆 Top & Risiko</h2><div id="performanceAnalysis"></div></div>
+            </div>
+            <!-- RETURNS TAB -->
+            <div id="returns" class="tab-content">
+                <div id="pendingRefundsSection"></div>
+                <div class="section">
+                    <h2>↩️ Retournierte Artikel</h2>
+                    <button onclick="loadReturns()" class="btn-success">🔄 Aktualisieren</button>
+                    <button onclick="exportReturnsCSV()" class="btn-warning">📊 CSV Export</button>
+                    <div id="returnsList" style="margin-top: 10px;"></div>
+                </div>
             </div>
             <!-- SETTINGS TAB -->
             <div id="settings" class="tab-content">
@@ -363,6 +400,7 @@
         console.log('✅ Sneaker Inventar Pro gestartet');
         let inventory = JSON.parse(localStorage.getItem('inventory') || '[]');
         let sales = JSON.parse(localStorage.getItem('sales') || '[]');
+        let returns = JSON.parse(localStorage.getItem('returns') || '[]');
         let selectedSize = null;
         let stream = null;
         let pendingImageBase64 = null;
@@ -794,6 +832,8 @@
             document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('saleDate').value = new Date().toISOString().split('T')[0];
             updateSaleItems(); updateAppStats(); updateApiKeyStatus();
+            // Check return reminders on startup
+            checkReturnReminders();
         });
 
         // === TABS ===
@@ -804,6 +844,7 @@
             document.getElementById(name).classList.add('active');
             if (name === 'inventory') loadInventory();
             if (name === 'sales') { updateSaleItems(); loadSales(); }
+            if (name === 'returns') loadReturns();
             if (name === 'dashboard') updateDashboard();
             if (name === 'settings') { updateAppStats(); updateApiKeyStatus(); }
         }
@@ -866,6 +907,9 @@
                 releaseDate: document.getElementById('releaseDate').value, size: selectedSize,
                 purchasePrice: parseFloat(price), includeVat: document.getElementById('includeVat').checked,
                 location: loc, dealer: dealer, date: purchaseDate,
+                orderNumber: document.getElementById('orderNumber').value.trim(),
+                invoiceDate: document.getElementById('invoiceDate').value,
+                deliveryDate: document.getElementById('deliveryDate').value,
                 notes: document.getElementById('notes').value,
                 stockx: { lastSale: parseFloat(document.getElementById('lastSale').value) || 0, highestBid: parseFloat(document.getElementById('highestBid').value) || 0, lowestAsk: parseFloat(document.getElementById('lowestAsk').value) || 0 }
             };
@@ -899,7 +943,7 @@
         }
 
         function resetForm() {
-            ['sku','modelName','productName','color','retailPrice','releaseDate','purchasePrice','location','dealer','notes','lastSale','highestBid','lowestAsk'].forEach(function(id) { document.getElementById(id).value = ''; });
+            ['sku','modelName','productName','color','retailPrice','releaseDate','purchasePrice','location','dealer','orderNumber','invoiceDate','deliveryDate','notes','lastSale','highestBid','lowestAsk'].forEach(function(id) { document.getElementById(id).value = ''; });
             document.getElementById('includeVat').checked = false;
             document.getElementById('researchLinks').style.display = 'none';
             document.querySelectorAll('.size-btn').forEach(function(b) { b.classList.remove('selected'); });
@@ -948,10 +992,31 @@
             filtered.forEach(item => {
                 const ri = inventory.indexOf(item);
                 const div = document.createElement('div');
-                div.className = 'item ' + (item.status === 'sold' ? 'sold' : '');
+                div.className = 'item ' + (item.status === 'sold' ? 'sold' : '') + (item.status === 'returned' ? 'returned' : '');
                 const net = item.includeVat ? item.purchasePrice / 1.19 : item.purchasePrice;
                 const profit = item.stockx?.highestBid ? (item.stockx.highestBid - net).toFixed(2) : null;
-                div.innerHTML = '<h4>' + item.name + (item.status === 'sold' ? ' [VERKAUFT]' : '') + '</h4>' +
+                
+                // Return deadline calculation (14 days from delivery, show up to 16 days)
+                let returnInfo = '';
+                if (item.deliveryDate && item.status === 'available') {
+                    const del = new Date(item.deliveryDate);
+                    const deadline = new Date(del.getTime() + 14 * 24 * 60 * 60 * 1000);
+                    const cutoff = new Date(del.getTime() + 16 * 24 * 60 * 60 * 1000);
+                    const now = new Date();
+                    const daysLeft = Math.ceil((deadline - now) / (24 * 60 * 60 * 1000));
+                    
+                    if (now <= cutoff) {
+                        if (daysLeft > 3) {
+                            returnInfo = '<div class="item-detail"><strong>⏰ Retoure bis:</strong> <span style="color:#28a745;">' + deadline.toLocaleDateString('de-DE') + ' (' + daysLeft + ' Tage)</span></div>';
+                        } else if (daysLeft > 0) {
+                            returnInfo = '<div class="item-detail" style="background:#fff3cd;"><strong>⚠️ Retoure bis:</strong> <span style="color:#ff9800;font-weight:bold;">' + deadline.toLocaleDateString('de-DE') + ' (nur noch ' + daysLeft + ' Tag' + (daysLeft > 1 ? 'e' : '') + '!)</span></div>';
+                        } else {
+                            returnInfo = '<div class="item-detail" style="background:#f8d7da;"><strong>❌ Retoure:</strong> <span style="color:#dc3545;">Frist abgelaufen (Karenz ' + Math.abs(daysLeft) + ' Tag' + (Math.abs(daysLeft) !== 1 ? 'e' : '') + ')</span></div>';
+                        }
+                    }
+                }
+                
+                div.innerHTML = '<h4>' + item.name + (item.status === 'sold' ? ' [VERKAUFT]' : '') + (item.status === 'returned' ? ' [RETOURNIERT]' : '') + '</h4>' +
                     (item.modelName ? '<p style="font-size:0.85em;color:#6c757d;margin:2px 0 8px 0;">📦 Box: ' + item.modelName + '</p>' : '') +
                     '<div class="item-details">' +
                     '<div class="item-detail"><strong>SKU:</strong> ' + item.sku + '</div>' +
@@ -961,7 +1026,11 @@
                     '<div class="item-detail"><strong>Einkauf:</strong> €' + item.purchasePrice + (item.includeVat ? ' (inkl.)' : '') + '</div>' +
                     (item.location ? '<div class="item-detail"><strong>Lagerort:</strong> ' + item.location + '</div>' : '') +
                     (item.dealer ? '<div class="item-detail"><strong>Händler:</strong> ' + item.dealer + '</div>' : '') +
+                    (item.orderNumber ? '<div class="item-detail"><strong>Bestellnr:</strong> ' + item.orderNumber + '</div>' : '') +
                     '<div class="item-detail"><strong>Datum:</strong> ' + item.date + '</div>' +
+                    (item.invoiceDate ? '<div class="item-detail"><strong>Rechnung:</strong> ' + new Date(item.invoiceDate).toLocaleDateString('de-DE') + '</div>' : '') +
+                    (item.deliveryDate ? '<div class="item-detail"><strong>Lieferung:</strong> ' + new Date(item.deliveryDate).toLocaleDateString('de-DE') + '</div>' : '') +
+                    returnInfo +
                     (profit ? '<div class="item-detail"><strong>Potenzial:</strong> <span class="' + (parseFloat(profit) > 0 ? 'positive' : 'negative') + '">€' + profit + '</span></div>' : '') +
                     '</div>' +
                     (item.stockx && (item.stockx.lastSale || item.stockx.highestBid) ? '<div class="stockx-box"><h5>📈 StockX</h5><div class="stockx-grid">' +
@@ -970,7 +1039,10 @@
                     (item.stockx.lowestAsk ? '<div class="stockx-item"><small>Niedrigste Forderung</small><br><strong>€' + item.stockx.lowestAsk + '</strong></div>' : '') +
                     '</div></div>' : '') +
                     (item.notes ? '<p style="margin-top:8px;font-size:0.85em;font-style:italic;color:#6c757d;">' + item.notes + '</p>' : '') +
-                    '<div style="margin-top:10px;"><button onclick="editItem(' + ri + ')" class="btn-info">✏️ Bearbeiten</button> <button onclick="deleteItem(' + ri + ')" class="btn-danger">🗑️ Löschen</button></div>';
+                    '<div style="margin-top:10px;">' +
+                    '<button onclick="editItem(' + ri + ')" class="btn-info">✏️ Bearbeiten</button> ' +
+                    (item.status === 'available' ? '<button onclick="returnItem(' + ri + ')" class="btn-warning" style="color:#212529;">↩️ Retoure</button> ' : '') +
+                    '<button onclick="deleteItem(' + ri + ')" class="btn-danger">🗑️ Löschen</button></div>';
                 c.appendChild(div);
             });
             showMessage(filtered.length + ' von ' + inventory.length + ' Artikeln', 'info');
@@ -1248,6 +1320,9 @@
             document.getElementById('purchaseDate').value = item.date || '';
             document.getElementById('location').value = item.location || '';
             document.getElementById('dealer').value = item.dealer || '';
+            document.getElementById('orderNumber').value = item.orderNumber || '';
+            document.getElementById('invoiceDate').value = item.invoiceDate || '';
+            document.getElementById('deliveryDate').value = item.deliveryDate || '';
             document.getElementById('includeVat').checked = item.includeVat || false;
             document.getElementById('notes').value = item.notes || '';
             document.getElementById('lastSale').value = item.stockx?.lastSale || '';
@@ -1414,6 +1489,7 @@
         // === DASHBOARD ===
         function updateDashboard() {
             const total = inventory.length, avail = inventory.filter(i => i.status === 'available').length, sold = inventory.filter(i => i.status === 'sold').length;
+            const ret = returns.length;
             const invest = inventory.reduce((s, i) => s + (i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice), 0);
             const mktVal = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((s, i) => s + i.stockx.highestBid, 0);
             const unreal = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).reduce((s, i) => { const n = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice; return s + (i.stockx.highestBid - n); }, 0);
@@ -1424,7 +1500,8 @@
                 '<div class="dashboard-card"><h3>💎 Marktwert</h3><div class="dashboard-value ' + (mktVal > invest ? 'positive' : 'neutral') + '">€' + mktVal.toFixed(0) + '</div></div>' +
                 '<div class="dashboard-card"><h3>📈 Unrealisiert</h3><div class="dashboard-value ' + (unreal > 0 ? 'positive' : 'negative') + '">€' + unreal.toFixed(0) + '</div></div>' +
                 '<div class="dashboard-card"><h3>💵 Verkäufe</h3><div class="dashboard-value neutral">€' + totSales.toFixed(0) + '</div><p style="font-size:0.8em;">' + sold + ' Stück</p></div>' +
-                '<div class="dashboard-card"><h3>🎯 Gewinn</h3><div class="dashboard-value ' + (totProfit > 0 ? 'positive' : 'negative') + '">€' + totProfit.toFixed(0) + '</div></div>';
+                '<div class="dashboard-card"><h3>🎯 Gewinn</h3><div class="dashboard-value ' + (totProfit > 0 ? 'positive' : 'negative') + '">€' + totProfit.toFixed(0) + '</div></div>' +
+                '<div class="dashboard-card"><h3>↩️ Retouren</h3><div class="dashboard-value neutral">' + ret + '</div></div>';
             const topS = [...sales].sort((a, b) => b.profit - a.profit).slice(0, 3);
             const topP = inventory.filter(i => i.status === 'available' && i.stockx?.highestBid).map(i => { const n = i.includeVat ? i.purchasePrice / 1.19 : i.purchasePrice; return { ...i, potential: i.stockx.highestBid - n }; }).sort((a, b) => b.potential - a.potential).slice(0, 3);
             document.getElementById('performanceAnalysis').innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;"><div><h4 style="margin-bottom:10px;">🏆 Top Verkäufe</h4>' +
@@ -1432,12 +1509,14 @@
                 '</div><div><h4 style="margin-bottom:10px;">💎 Top Potenzial</h4>' +
                 (topP.length ? topP.map(i => '<div class="item-detail" style="margin:5px 0;"><strong>' + i.name + '</strong><br><span class="' + (i.potential > 0 ? 'positive' : 'negative') + '">€' + i.potential.toFixed(2) + '</span></div>').join('') : '<p style="color:#6c757d;font-size:0.85em;">Keine Daten</p>') +
                 '</div></div>';
+            // Render return reminders at top of dashboard
+            renderDashboardReturnReminders();
         }
 
         // === EXPORT / IMPORT ===
         function exportInventoryCSV() {
             if (!inventory.length) { showMessage('❌ Kein Inventar', 'error'); return; }
-            const csv = ['SKU,Modell,Name,Marke,Farbe,Größe,Status,Einkaufspreis,MwSt,Retail,Lagerort,Händler,Datum', ...inventory.map(i => [i.sku, '"' + (i.modelName || '') + '"', '"' + i.name + '"', i.brand, i.color || '', i.size, i.status, i.purchasePrice, i.includeVat ? 'Ja' : 'Nein', i.retailPrice || '', '"' + (i.location || '') + '"', '"' + (i.dealer || '') + '"', i.date].join(','))].join('\n');
+            const csv = ['SKU,Modell,Name,Marke,Farbe,Größe,Status,Einkaufspreis,MwSt,Retail,Lagerort,Händler,Bestellnr,Datum,Rechnungsdatum,Lieferdatum', ...inventory.map(i => [i.sku, '"' + (i.modelName || '') + '"', '"' + i.name + '"', i.brand, i.color || '', i.size, i.status, i.purchasePrice, i.includeVat ? 'Ja' : 'Nein', i.retailPrice || '', '"' + (i.location || '') + '"', '"' + (i.dealer || '') + '"', '"' + (i.orderNumber || '') + '"', i.date, i.invoiceDate || '', i.deliveryDate || ''].join(','))].join('\n');
             download(csv, 'inventar-' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv');
             showMessage('✅ CSV exportiert!', 'success');
         }
@@ -1471,7 +1550,7 @@
 
         // === BACKUP ===
         function exportBackup() {
-            download(JSON.stringify({ inventory, sales, exportDate: new Date().toISOString() }, null, 2), 'backup-' + new Date().toISOString().split('T')[0] + '.json', 'application/json');
+            download(JSON.stringify({ inventory, sales, returns, exportDate: new Date().toISOString() }, null, 2), 'backup-' + new Date().toISOString().split('T')[0] + '.json', 'application/json');
             showMessage('✅ Backup erstellt!', 'success');
         }
         function importBackup() {
@@ -1481,9 +1560,10 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (confirm('Backup laden? Überschreibt aktuelle Daten!')) {
-                        inventory = data.inventory || []; sales = data.sales || [];
+                        inventory = data.inventory || []; sales = data.sales || []; returns = data.returns || [];
                         localStorage.setItem('inventory', JSON.stringify(inventory));
                         localStorage.setItem('sales', JSON.stringify(sales));
+                        localStorage.setItem('returns', JSON.stringify(returns));
                         showMessage('✅ Backup geladen!', 'success'); updateSaleItems();
                     }
                 } catch (e) { showMessage('❌ Ungültiges Backup', 'error'); }
@@ -1492,17 +1572,17 @@
         }
         function clearAll() {
             if (confirm('ACHTUNG: Alle Daten löschen?')) {
-                inventory = []; sales = [];
-                localStorage.removeItem('inventory'); localStorage.removeItem('sales');
+                inventory = []; sales = []; returns = [];
+                localStorage.removeItem('inventory'); localStorage.removeItem('sales'); localStorage.removeItem('returns');
                 showMessage('✅ Alle Daten gelöscht', 'success'); updateSaleItems(); updateAppStats();
             }
         }
 
         // === UTILS ===
         function updateAppStats() {
-            const sz = new Blob([JSON.stringify(inventory) + JSON.stringify(sales)]).size;
+            const sz = new Blob([JSON.stringify(inventory) + JSON.stringify(sales) + JSON.stringify(returns)]).size;
             const hasKey = getApiKey() ? '✅ Aktiv' : '❌ Nicht konfiguriert';
-            document.getElementById('appStats').innerHTML = '<p><strong>Artikel:</strong> ' + inventory.length + '</p><p><strong>Verkäufe:</strong> ' + sales.length + '</p><p><strong>Speicher:</strong> ' + (sz / 1024).toFixed(2) + ' KB</p><p><strong>KI-Scanner:</strong> ' + hasKey + '</p>';
+            document.getElementById('appStats').innerHTML = '<p><strong>Artikel:</strong> ' + inventory.length + '</p><p><strong>Verkäufe:</strong> ' + sales.length + '</p><p><strong>Retouren:</strong> ' + returns.length + '</p><p><strong>Speicher:</strong> ' + (sz / 1024).toFixed(2) + ' KB</p><p><strong>KI-Scanner:</strong> ' + hasKey + '</p>';
         }
         function download(content, filename, type) {
             const blob = new Blob([content], { type }); const url = URL.createObjectURL(blob);
@@ -1513,6 +1593,285 @@
             msg.textContent = text; msg.className = 'message ' + type; msg.style.display = 'block';
             setTimeout(() => msg.style.display = 'none', 4000);
         }
+        // === RETURNS ===
+        function returnItem(idx) {
+            const item = inventory[idx];
+            if (!item || item.status !== 'available') {
+                showMessage('❌ Nur verfügbare Artikel können retourniert werden.', 'error');
+                return;
+            }
+            
+            if (!confirm('↩️ Wird dieser Schuh retourniert?\n\n' + item.name + '\nSKU: ' + item.sku + '\nGröße: ' + item.size + '\nEK: €' + item.purchasePrice + (item.dealer ? '\nHändler: ' + item.dealer : '') + (item.orderNumber ? '\nBestellnr: ' + item.orderNumber : ''))) {
+                return;
+            }
+            
+            const returnDate = new Date().toISOString().split('T')[0];
+            
+            // Add to returns database
+            returns.push({
+                id: Date.now(),
+                itemId: item.id,
+                name: item.name,
+                modelName: item.modelName || '',
+                sku: item.sku,
+                brand: item.brand,
+                size: item.size,
+                color: item.color || '',
+                purchasePrice: item.purchasePrice,
+                expectedRefund: item.purchasePrice,
+                includeVat: item.includeVat,
+                dealer: item.dealer || '',
+                orderNumber: item.orderNumber || '',
+                location: item.location || '',
+                invoiceDate: item.invoiceDate || '',
+                deliveryDate: item.deliveryDate || '',
+                purchaseDate: item.date,
+                returnDate: returnDate,
+                refundConfirmed: false,
+                refundDate: null,
+                recorded: new Date().toISOString()
+            });
+            localStorage.setItem('returns', JSON.stringify(returns));
+            
+            // Mark item as returned
+            inventory[idx].status = 'returned';
+            inventory[idx].returnDate = returnDate;
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            
+            showMessage('✅ ' + item.name + ' wurde als retourniert markiert.', 'success');
+            loadInventory();
+            updateSaleItems();
+        }
+
+        function loadReturns() {
+            renderPendingRefunds();
+            const c = document.getElementById('returnsList');
+            if (!c) return;
+            c.innerHTML = '';
+            if (!returns.length) {
+                c.innerHTML = '<p style="text-align:center;color:#6c757d;padding:20px;">Keine Retouren vorhanden</p>';
+                return;
+            }
+            [...returns].sort((a, b) => new Date(b.returnDate) - new Date(a.returnDate)).forEach((ret, i) => {
+                const actualIdx = returns.indexOf(ret);
+                const div = document.createElement('div');
+                div.className = 'item returned';
+                const refundStatus = ret.refundConfirmed
+                    ? '<div class="item-detail" style="background:#d4edda;"><strong>✅ Erstattet:</strong> €' + (ret.expectedRefund || ret.purchasePrice) + ' am ' + new Date(ret.refundDate).toLocaleDateString('de-DE') + '</div>'
+                    : '<div class="item-detail" style="background:#fff3cd;"><strong>💸 Erstattung:</strong> ausstehend</div>';
+                div.innerHTML = '<h4>↩️ ' + ret.name + '</h4>' +
+                    (ret.modelName ? '<p style="font-size:0.85em;color:#6c757d;margin:2px 0 8px 0;">📦 Box: ' + ret.modelName + '</p>' : '') +
+                    '<div class="item-details">' +
+                    '<div class="item-detail"><strong>SKU:</strong> ' + ret.sku + '</div>' +
+                    '<div class="item-detail"><strong>Größe:</strong> ' + ret.size + '</div>' +
+                    '<div class="item-detail"><strong>Marke:</strong> ' + ret.brand + '</div>' +
+                    (ret.color ? '<div class="item-detail"><strong>Farbe:</strong> ' + ret.color + '</div>' : '') +
+                    '<div class="item-detail"><strong>Einkauf:</strong> €' + ret.purchasePrice + (ret.includeVat ? ' (inkl.)' : '') + '</div>' +
+                    (ret.dealer ? '<div class="item-detail"><strong>Händler:</strong> ' + ret.dealer + '</div>' : '') +
+                    (ret.orderNumber ? '<div class="item-detail"><strong>Bestellnr:</strong> ' + ret.orderNumber + '</div>' : '') +
+                    '<div class="item-detail"><strong>Gekauft:</strong> ' + ret.purchaseDate + '</div>' +
+                    '<div class="item-detail" style="background:#fff3e0;"><strong>↩️ Retourniert:</strong> ' + new Date(ret.returnDate).toLocaleDateString('de-DE') + '</div>' +
+                    refundStatus +
+                    '</div>' +
+                    '<div style="margin-top:8px;">' +
+                    '<button onclick="undoReturn(' + actualIdx + ')" class="btn-secondary">↩️ Rückgängig</button>' +
+                    '</div>';
+                c.appendChild(div);
+            });
+        }
+
+        // === REFUND TRACKING ===
+        function getPendingRefunds() {
+            const now = new Date();
+            return returns.filter(r => {
+                if (r.refundConfirmed) return false;
+                const retDate = new Date(r.returnDate);
+                const daysSince = Math.floor((now - retDate) / (24 * 60 * 60 * 1000));
+                return daysSince >= 3; // show only after 3 days
+            });
+        }
+
+        function renderPendingRefunds() {
+            const container = document.getElementById('pendingRefundsSection');
+            if (!container) return;
+            
+            const pending = getPendingRefunds();
+            
+            if (!pending.length) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            const now = new Date();
+            container.innerHTML = '<div class="refund-pending">' +
+                '<h4>💸 Ausstehende Erstattungen (' + pending.length + ')</h4>' +
+                pending.map(r => {
+                    const daysSince = Math.floor((now - new Date(r.returnDate)) / (24 * 60 * 60 * 1000));
+                    const idx = returns.indexOf(r);
+                    return '<div class="refund-item">' +
+                        '<div class="refund-item-info">' +
+                        '<strong>' + r.name + '</strong><br>' +
+                        r.sku + ' · Gr. ' + r.size + (r.dealer ? ' · ' + r.dealer : '') + (r.orderNumber ? ' · #' + r.orderNumber : '') +
+                        '<br><span style="opacity:0.8;">Retourniert vor ' + daysSince + ' Tagen (' + new Date(r.returnDate).toLocaleDateString('de-DE') + ')</span>' +
+                        '</div>' +
+                        '<div class="refund-item-actions">' +
+                        '<span style="font-size:0.85em;">€</span>' +
+                        '<input type="number" class="refund-amount-input" id="refundAmount' + idx + '" value="' + (r.expectedRefund || r.purchasePrice) + '" step="0.01">' +
+                        '<button class="refund-confirm-btn" onclick="confirmRefund(' + idx + ')">✅ Erhalten</button>' +
+                        '</div>' +
+                        '</div>';
+                }).join('') +
+                '</div>';
+        }
+
+        function confirmRefund(retIdx) {
+            const ret = returns[retIdx];
+            if (!ret) return;
+            
+            const amountInput = document.getElementById('refundAmount' + retIdx);
+            const amount = amountInput ? parseFloat(amountInput.value) : ret.purchasePrice;
+            
+            if (!confirm('💸 Geldeingang bestätigen?\n\n' + ret.name + '\nBetrag: €' + amount.toFixed(2) + (ret.dealer ? '\nHändler: ' + ret.dealer : ''))) {
+                return;
+            }
+            
+            returns[retIdx].refundConfirmed = true;
+            returns[retIdx].refundDate = new Date().toISOString().split('T')[0];
+            returns[retIdx].expectedRefund = amount;
+            localStorage.setItem('returns', JSON.stringify(returns));
+            
+            showMessage('✅ Erstattung von €' + amount.toFixed(2) + ' für ' + ret.name + ' bestätigt!', 'success');
+            loadReturns();
+        }
+
+        function undoReturn(retIdx) {
+            if (!confirm('Retoure rückgängig machen? Der Artikel wird wieder ins Inventar aufgenommen.')) return;
+            const ret = returns[retIdx];
+            if (!ret) return;
+            
+            // Find the original item and restore it
+            const item = inventory.find(i => i.id === ret.itemId);
+            if (item) {
+                item.status = 'available';
+                delete item.returnDate;
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+            }
+            
+            returns.splice(retIdx, 1);
+            localStorage.setItem('returns', JSON.stringify(returns));
+            showMessage('✅ Retoure rückgängig gemacht — Artikel wieder verfügbar.', 'success');
+            loadReturns();
+        }
+
+        function exportReturnsCSV() {
+            if (!returns.length) { showMessage('❌ Keine Retouren', 'error'); return; }
+            const csv = ['SKU,Modell,Name,Marke,Größe,EK,MwSt,Händler,Bestellnr,Kaufdatum,Rechnungsdatum,Lieferdatum,Retourniert_am,Erstattet,Erstattungsbetrag,Erstattungsdatum',
+                ...returns.map(r => [r.sku, '"' + (r.modelName || '') + '"', '"' + r.name + '"', r.brand, r.size, r.purchasePrice, r.includeVat ? 'Ja' : 'Nein', '"' + (r.dealer || '') + '"', '"' + (r.orderNumber || '') + '"', r.purchaseDate, r.invoiceDate || '', r.deliveryDate || '', r.returnDate, r.refundConfirmed ? 'Ja' : 'Nein', r.expectedRefund || r.purchasePrice, r.refundDate || ''].join(','))
+            ].join('\n');
+            download(csv, 'retouren-' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv');
+            showMessage('✅ Retouren CSV exportiert!', 'success');
+        }
+
+        // === RETURN REMINDERS ===
+        function checkReturnReminders() {
+            const now = new Date();
+            const critical = []; // 0-3 days left
+            const warning = [];  // 4-7 days left
+            
+            inventory.forEach(item => {
+                if (item.status !== 'available' || !item.deliveryDate) return;
+                const del = new Date(item.deliveryDate);
+                const deadline = new Date(del.getTime() + 14 * 24 * 60 * 60 * 1000);
+                const cutoff = new Date(del.getTime() + 16 * 24 * 60 * 60 * 1000);
+                if (now > cutoff) return; // past 16 days, no reminder
+                const daysLeft = Math.ceil((deadline - now) / (24 * 60 * 60 * 1000));
+                
+                if (daysLeft <= 0) return; // expired but within karenz, no popup
+                if (daysLeft <= 3) critical.push({ ...item, daysLeft, deadline });
+                else if (daysLeft <= 7) warning.push({ ...item, daysLeft, deadline });
+            });
+            
+            // Also check refund reminders
+            const pendingRefunds = getPendingRefunds();
+            
+            // Popup alert for critical items (0-3 days)
+            let msg = '';
+            if (critical.length > 0) {
+                msg += '⚠️ RETOURE-FRIST LÄUFT AB!\n\n';
+                critical.forEach(item => {
+                    msg += '🔴 ' + item.name + ' (Gr. ' + item.size + ') — nur noch ' + item.daysLeft + ' Tag' + (item.daysLeft > 1 ? 'e' : '') + '!\n';
+                });
+                if (warning.length > 0) {
+                    msg += '\n🟠 Außerdem ' + warning.length + ' Artikel mit Frist in 4-7 Tagen.\n';
+                }
+            } else if (warning.length > 0) {
+                msg += '⏰ Retoure-Fristen beachten:\n\n';
+                warning.forEach(item => {
+                    msg += '🟠 ' + item.name + ' (Gr. ' + item.size + ') — noch ' + item.daysLeft + ' Tage\n';
+                });
+            }
+            
+            if (pendingRefunds.length > 0) {
+                msg += (msg ? '\n' : '') + '💸 Ausstehende Erstattungen: ' + pendingRefunds.length + ' Retoure' + (pendingRefunds.length > 1 ? 'n' : '') + ' warten auf Geldeingang.\n';
+            }
+            
+            if (msg) setTimeout(() => alert(msg), 500);
+        }
+
+        function renderDashboardReturnReminders() {
+            const container = document.getElementById('returnReminderDashboard');
+            if (!container) return;
+            
+            const now = new Date();
+            const alerts = [];
+            
+            inventory.forEach(item => {
+                if (item.status !== 'available' || !item.deliveryDate) return;
+                const del = new Date(item.deliveryDate);
+                const deadline = new Date(del.getTime() + 14 * 24 * 60 * 60 * 1000);
+                const cutoff = new Date(del.getTime() + 16 * 24 * 60 * 60 * 1000);
+                if (now > cutoff) return;
+                const daysLeft = Math.ceil((deadline - now) / (24 * 60 * 60 * 1000));
+                
+                if (daysLeft > 0 && daysLeft <= 14) {
+                    alerts.push({ ...item, daysLeft, deadline });
+                }
+            });
+            
+            const pendingRefunds = getPendingRefunds();
+            
+            let html = '';
+            
+            if (alerts.length) {
+                alerts.sort((a, b) => a.daysLeft - b.daysLeft);
+                html += '<div class="return-reminder">' +
+                    '<h4>⏰ Retoure-Fristen (' + alerts.length + ' Artikel)</h4>' +
+                    alerts.map(a => {
+                        const cls = a.daysLeft <= 3 ? 'days-critical' : a.daysLeft <= 7 ? 'days-warning' : 'days-ok';
+                        return '<div class="return-reminder-item">' +
+                            '<span>' + a.name + ' · Gr. ' + a.size + (a.dealer ? ' · ' + a.dealer : '') + '</span>' +
+                            '<span class="days-left ' + cls + '">' + a.daysLeft + ' Tag' + (a.daysLeft > 1 ? 'e' : '') + '</span>' +
+                            '</div>';
+                    }).join('') +
+                    '</div>';
+            }
+            
+            if (pendingRefunds.length) {
+                html += '<div class="return-reminder" style="background: linear-gradient(135deg, #6a11cb, #2575fc);">' +
+                    '<h4>💸 Erstattungen erwartet (' + pendingRefunds.length + ')</h4>' +
+                    pendingRefunds.map(r => {
+                        const daysSince = Math.floor((now - new Date(r.returnDate)) / (24 * 60 * 60 * 1000));
+                        return '<div class="return-reminder-item">' +
+                            '<span>' + r.name + ' · Gr. ' + r.size + (r.dealer ? ' · ' + r.dealer : '') + ' · €' + r.purchasePrice + '</span>' +
+                            '<span class="days-left days-warning">' + daysSince + ' Tage her</span>' +
+                            '</div>';
+                    }).join('') +
+                    '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
         console.log('✅ App bereit — KI-Scanner verfügbar');
     </script>
 </body>
